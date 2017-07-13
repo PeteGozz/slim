@@ -18,5 +18,13 @@
 2.0.x
 -----
 - restart X server on ctrl-alt-backspace
+-- works here. May be a side effect, Needs validation.
 - allow switching theme on the fly if a set is specified in slim.conf
 - text alignment, to allow to center texts of unknown length (e.g. %host)
+
+Devuan Preparations
+-------------------
+     - Move documentation to rst
+       MarkDown as side effect for git sites may be useful.
+     -- This is reasonable at the moment.
+     
