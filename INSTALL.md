@@ -94,7 +94,7 @@ Simple test
 
  Test the freshly made executable::
    
-		$ ./slim -v
+     $ ./slim -v
 
 	
 Installation

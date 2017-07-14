@@ -1,23 +1,106 @@
-# the following variable defines the session which is started if the user
-# doesn't explicitely select a session
-DEFAULT_SESSION=twm
+#  -*- shell-script -*-
+# edit to suit your system
+# save to ~/.xinitrc or ~/.xsession
+# # ~$ man startx   for more information
 
-case $1 in
-xfce4)
-	exec startxfce4
-	;;
-icewm)
-	icewmbg &
-	icewmtray &
-	exec icewm
-	;;
-wmaker)
-	exec wmaker
-	;;
-blackbox)
-	exec blackbox
-	;;
-*)
-	exec $DEFAULT_SESSION
-	;;
-esac
+# allocate your startx or default xinit preference
+# Devuan default for jessie or ascii is xfce4 :
+# see the case statement below for examples
+
+DEFAULT_SESSION=xfce4-session
+
+if test -x dbus-launch ; then
+    # there is dbus infrastructure
+    DB_LAUNCH=$(which dbus_launch)
+    DB_L_OPTIONS="--auto-syntax --exit-with-session"
+    DBL="${DB_LAUNCH} ${DBL_OPTIONS}"
+    #  _any_ dbus sessions sockets left unconnected...
+    /usr/bin/dbus-cleanup-sockets || true
+else
+    set DBL to empty string or : true if you prefer
+    DBL=""
+fi
+
+
+if [ -z $1 ]; then
+    # no option for xinit or using startx ?
+    # then just jump to default
+    exec $DBL $DEFAULT_SESSION
+fi
+### everything above here makes for a nice start
+### for a smaller minimal file
+
+if [ ! -z $1 ];
+then
+    # $1 hopefully maps to
+    # one of these executables like so:
+    case $1 in
+	xfce4*)
+	    exec $DBL xfce4-session
+	    ;;
+	fluxbo* | flux )
+	    # see also: ~/.fluxbox/startup
+	    exec $DBL startfluxbox
+	    ;;
+	openbo* | ob )
+	    # see also: ~/.config/openbox/autostart
+	    exec $DBL openbox-session
+	    ;;
+	dwm)
+	    xbindkeys || true  &
+	    exec $DBL dwm
+	    ;;
+	twm )
+	    xbindkeys || true  &
+	    xterm -e /bin/bash &
+	    exec $DBL twm
+	    ;;
+	icewm)
+	    icewmbg &
+	    icewmtray &
+	    exec $DBL icewm
+	    ;;
+	wmaker)
+	    exec $DBL wmaker
+	    ;;
+	blackb*)
+	    exec $DBL blackbox
+	    ;;
+	*)
+	    if [ -x $1 ]; then
+		# user always knows best
+		exec $DBL $1
+	    else
+		exec $DBL $DEFAULT_SESSION
+	    fi
+	    ;;
+    esac
+fi
+
+# some wicket-keeps or backstops
+
+if [ ! -x $1 ]; then
+    cat <<EOEM
+   ALERT: Slim has Failed to launch any X environment.
+	  Unable to execute: "$1"
+   Try xinit  or  startx with _no options_ for $DEFAULT_SESSION
+       or if "server in use"
+       Try:  xinit -- :2" or :$(tty | tr -d /dev/tty)
+       finally try:  startx sh
+
+   EOEM
+
+else
+    # we have to hope $1 is some argument an xterm understands
+    echo "Trying fallback X access. Hand focus any xterms or windows"
+    xterm -e $1 || xterm &
+    exec $DBL $DEFAULT_SESSION
+fi
+
+### never give up  ###
+if [ "$?" != "0" ]; then
+    echo -e "\ntry:\t xinit -- :$(tty | tr -d /dev/tty)"
+    echo -e "or plain  startx "
+fi
+
+exit 0
