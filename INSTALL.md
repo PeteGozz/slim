@@ -4,13 +4,11 @@
 
 Prerequisites:
 --------------
-   
    - cmake
    - X.org or XFree86
    - libxmu
    - libpng
    - libjpeg
-     
    
    Optionally may also require:
    
@@ -25,37 +23,50 @@ External Applications
 
 For Operations::
   
-    - one Window Manager or Desktop Environment to login to.
+    - At least one Window Manager or Desktop Environment to _login_ to.
       + _F1_ Allows choice between installed environments.
-    - "console" Requires an  Xterm
+    -  "console" Requires an  Xterm
     -  _F11_  as screenshot
        + Requires "import" e.g as found in the imagemagick suite.
        + Alt: slim has also well tested with "scrot"
 
----------------------
-  Build and Install
----------------------
 
-1. Build 
----------
-
-   Optionally edit the CMakefile.txt to adjust libraries and paths 
-   to your Operating System (if needed).
-   For example:  CMAKE_INSTALL_PREFIX "/usr/local"
-
-2. Default Build 
+The Build Process
 -----------------
-::
 
-    $ mkdir build
-    $ cd build
+Here is the short version_::
+
+  mkdir build
+  cd ./build
+  cmake ../  -DUSE_PAM=yes
+
+Step by step_
+
+1. Create_ a clean space to build the software::
+
+  $ mkdir build
+  
+*Optionally* edit the CMakefile.txt
+to adjust libraries and paths to your Operating System (if needed).
+For example:  CMAKE_INSTALL_PREFIX "/usr/local"
+
+2. Work_ from the clean dir::
+
+  $ cd build
+
+3. Configure_ your final make files::
+
     $ cmake ../
 
-Notes:
-The above should be a reasonable first test.
-This incantation should get you a full build.
-With ConsoleKit and Desktop Bus support.
+Notes_:
+The above minimal instruction would be a reasonable first test.
+You will need some functionality :)
 
+Configure Options
+-----------------
+This next incantation should get you a full build.
+With ConsoleKit and Desktop Bus support::
+  
     $ cmake ../ -DUSE_PAM=yes -DUSE_CONSOLEKIT=yes   
 
 To Disallow consolkit  *(N.B. and by extension dbus)*
@@ -63,36 +74,48 @@ and NOT build shared libraries::
 
     $ cmake ../ -DUSE_PAM=yes -DUSE_CONSOLEKIT=no -DBUILD_SHARED_LIBS=no
     
-After you have configured your make files run make::
+This is the stage you _may_ want to tweak the new make files.
+Or more probably not so::
+  
+     $ make
+     $ ls
 
-    $ make
-    $ ls 
+Configure Stage notes_
 
-3. Simple test
---------------
+Cmake caches assertively.
+It quite safe to remove the ./build/*cache files.
+Re-runs will rebuild them.
+This approach extends to the clean build directory itself.
+On a project of this modest size the compile time is short.
+The debug time ? 
+     
+Simple test
+-----------
 
-   Test the freshly made executable::
+ Test the freshly made executable::
    
 		$ ./slim -v
-	
-4. Installation 
-----------------
 
+	
+Installation
+------------
+ 
 The GNU Makefile produced by cmake has some interesting targets.
 Also Consider current CMake settings:  CMAKE_INSTALL_PREFIX "/usr/local"
 ** $ sudo make install/local  **  (may be reassuring.)
 
-Then there is the classic::
+The classic::
   
   $ sudo make install
 
 Test the new system theme *from a running X session*::
   
   $ slim -p /usr/local/share/slim/themes/default
+  
 
-5. Other 
----------
-Some notes hints and paths from the wild::
+Other
+-----
+Some notes hints and paths from the wilds::
 
      $ make clean 
      $ cmake --help
@@ -104,9 +127,10 @@ Remove the "build" directory tree (only) to start over.
 
 Path Manifest
 -------------
+
 Here is a listing of typical installed paths
-as output by an "updating" run of " make install " 
-Notice only rebuilt files are installed ::
+as output by an "updating" run of "make install" 
+Notice *only rebuilt* files are re-installed ::
    
     Install the project...
     /usr/bin/cmake -P cmake_install.cmake
@@ -126,12 +150,17 @@ Notice only rebuilt files are installed ::
 
 Linked Libraries
 ................
+
  This is a typical linkage string passed to the compiler
  for the final slim (elf) executable.
+ (With consolekit and dbus.)
 
-""
--lfontconfig -lpam -ldbus-1 -lck-connector -lm -lrt -lcrypt -lX11 -lXft -lXrender -lXrandr -lXmu -lfreetype -ljpeg -lpng -lz libslim.so.1.3.6 -ljpeg -lpng -lz
-""
+::
+
+    -lfontconfig -lpam -ldbus-1 -lck-connector -lm -lrt 
+    -lcrypt -lX11 -lXft -lXrender -lXrandr -lXmu -lfreetype 
+    -ljpeg -lpng -lz libslim.so.1.3.6 -ljpeg -lpng -lz
+
 
 $ ldd slim
 
@@ -143,3 +172,5 @@ $ file slim
      dynamically linked, interpreter /lib/ld-linux.so.2,
      for GNU/Linux 2.6.32,
      BuildID[sha1]=b44698a3baf559d0a79e517221c0ad6cea2b5504, not stripped
+
+     
