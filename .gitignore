@@ -4,4 +4,6 @@
 *.backup
 *.markdown
 build/
+debian/
+.pc/
 
