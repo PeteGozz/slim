@@ -1,6 +1,6 @@
 #  -*- shell-script -*-
 # edit to suit your system
-# save to ~/.xinitrc or ~/.xsession
+# save to ~/.xinitrc or ~/.xsession 
 # # ~$ man startx   for more information
 
 # allocate your startx or default xinit preference
@@ -10,31 +10,28 @@
 DEFAULT_SESSION=xfce4-session
 
 if test -x dbus-launch ; then
-    # there is dbus infrastructure
+    # there is system dbus infrastructure
     DB_LAUNCH=$(which dbus_launch)
     DB_L_OPTIONS="--auto-syntax --exit-with-session"
     DBL="${DB_LAUNCH} ${DBL_OPTIONS}"
-    #  _any_ dbus sessions sockets left unconnected...
+    #  _any_ dbus sessions sockets left unconnected... 
     /usr/bin/dbus-cleanup-sockets || true
 else
-    set DBL to empty string or : true if you prefer
     DBL=""
 fi
-
 
 if [ -z $1 ]; then
     # no option for xinit or using startx ?
     # then just jump to default
     exec $DBL $DEFAULT_SESSION
 fi
-### everything above here makes for a nice start
-### for a smaller minimal file
+### everything above here makes for a nice minimal file
 
 if [ ! -z $1 ];
 then
     # $1 hopefully maps to
     # one of these executables like so:
-    case $1 in
+    case $1 in			
 	xfce4*)
 	    exec $DBL xfce4-session
 	    ;;
@@ -43,17 +40,15 @@ then
 	    exec $DBL startfluxbox
 	    ;;
 	openbo* | ob )
-	    # see also: ~/.config/openbox/autostart
+	    # see also: ~/.config/openbox/autostart 
 	    exec $DBL openbox-session
 	    ;;
-	dwm)
-	    xbindkeys || true  &
-	    exec $DBL dwm
-	    ;;
-	twm )
+	twm | dwm)
+	    # which are not related in the slightest
+	    # it is OK to not have xbindkeys 
 	    xbindkeys || true  &
 	    xterm -e /bin/bash &
-	    exec $DBL twm
+	    exec $DBL twm 
 	    ;;
 	icewm)
 	    icewmbg &
@@ -78,23 +73,22 @@ then
 fi
 
 # some wicket-keeps or backstops
-
 if [ ! -x $1 ]; then
     cat <<EOEM
    ALERT: Slim has Failed to launch any X environment.
-	  Unable to execute: "$1"
+          Unable to execute: "$1"
    Try xinit  or  startx with _no options_ for $DEFAULT_SESSION
-       or if "server in use"
-       Try:  xinit -- :2" or :$(tty | tr -d /dev/tty)
+       or if "server in use" 
+       Try:  xinit -- :2   
        finally try:  startx sh
 
    EOEM
-
+    
 else
     # we have to hope $1 is some argument an xterm understands
     echo "Trying fallback X access. Hand focus any xterms or windows"
     xterm -e $1 || xterm &
-    exec $DBL $DEFAULT_SESSION
+    exec $DBL $DEFAULT_SESSION       
 fi
 
 ### never give up  ###
