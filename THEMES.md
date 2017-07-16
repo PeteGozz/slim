@@ -33,7 +33,7 @@ SUPPORTED FORMATS
     either 
     + absolute in pixels, ie 350
     + relative to the container.
-    ie 50% is in the middle of the screen.
+    i.e. 50% is in the middle of the screen.
 
 
 Examples

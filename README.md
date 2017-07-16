@@ -7,10 +7,11 @@ Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 INTRODUCTION
 ------------
 
-    SLiM (Simple Login Manager) is a graphical login manager for X11.
-    It aims to be simple, fast and independent from the various
+    SLiM (Simple Login Manager) 
+	Is a graphical login manager for X11.
+    It aims to be simple, fast and *independent* from the various
     desktop environments.
-    SLiM is based on latest stable release of Login.app by Per Lidén.
+    SLiM was based on latest stable release of Login.app by Per Lidén.
 
 Features:
 ..........
@@ -36,7 +37,7 @@ USAGE
     
     Enter username and password to login.
 
-    The ~/.xinitrc file is executed by default,
+    *The ~/.xinitrc file is executed by default*,
     so be sure to have a working
     .xinitrc file in your home.
     (see the config file)
@@ -82,7 +83,7 @@ COPYRIGHT
      licensed through the GNU General Public License. 
 
 
-     # md and rst compliant formatting.  2017
+     # md and rst compliant formatting.  2017 blame:PeteGozz
 
 
 

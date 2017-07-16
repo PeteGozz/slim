@@ -24,7 +24,7 @@ External Applications
 For Operations::
   
     - At least one Window Manager or Desktop Environment to _login_ to.
-      + _F1_ Allows choice between installed environments.
+      +  _F1_ Allows choice between installed environments.
     -  "console" Requires an  Xterm
     -  _F11_  as screenshot
        + Requires "import" e.g as found in the imagemagick suite.
@@ -36,9 +36,9 @@ The Build Process
 
 Here is the short version::
 
-  mkdir build
-  cd ./build
-  cmake ../  -DUSE_PAM=yes
+  mkdir build ; 
+  cd ./build ; 
+  cmake ../  -DUSE_PAM=yes 
 
 Step by step
 
