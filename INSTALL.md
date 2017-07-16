@@ -69,7 +69,7 @@ With ConsoleKit and Desktop Bus support::
   
     $ cmake ../ -DUSE_PAM=yes -DUSE_CONSOLEKIT=yes   
 
-To Disallow consolkit  *(N.B. and by extension dbus)*
+To Disallow ConsoleKit  *(N.B. and by extension dbus)*
 and NOT build shared libraries::
 
     $ cmake ../ -DUSE_PAM=yes -DUSE_CONSOLEKIT=no -DBUILD_SHARED_LIBS=no
@@ -155,7 +155,7 @@ Linked Libraries
 
  This is a typical linkage string passed to the compiler
  for the final slim (elf) executable.
- (With consolekit and dbus.)
+ (With ConsoleKit and dbus.)
 
 ::
 
@@ -175,4 +175,9 @@ $ file slim
      for GNU/Linux 2.6.32,
      BuildID[sha1]=b44698a3baf559d0a79e517221c0ad6cea2b5504, not stripped
 
-     
+Convenience Installable Archiver
+---------------------------------
+From the build directory
+
+$ fakeroot cpack --config CPackConfig.cmake
+

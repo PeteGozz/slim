@@ -218,6 +218,9 @@ if(BUILD_SLIMLOCK)
     )
 endif(BUILD_SLIMLOCK)
 
+## themes directory
+subdirs(themes)
+
 ####### install
 # slim
 install(TARGETS slim RUNTIME DESTINATION bin)
@@ -233,15 +236,28 @@ if (BUILD_SHARED_LIBS)
 		ARCHIVE DESTINATION lib
 	)
 endif (BUILD_SHARED_LIBS)
-
 # man file
 install(FILES slim.1 DESTINATION ${MANDIR}/man1/)
 install(FILES slimlock.1 DESTINATION ${MANDIR}/man1/)
 # configure
 install(FILES slim.conf DESTINATION ${SYSCONFDIR})
-# systemd service file
+# harmless systemd service file
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-# themes directory
-subdirs(themes)
+
+### CPack driven installer packages ###
+###   this works with fakeroot      ###
+### fakeroot cpack --config CPackConfig.cmake ###
+include (InstallRequiredSystemLibraries)
+set (CPACK_RESOURCE_FILE_LICENSE  
+  "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
+set (CPACK_PACKAGE_VERSION_MAJOR "${SLIM_VERSION_MAJOR}")
+set (CPACK_PACKAGE_VERSION_MINOR "${SLIM_VERSION_MINOR}")
+set (CPACK_PACKAGE_VERSION_PATCH "${SLIM_VERSION_PATCH}")
+include (CPack)
+## its not the most beautiful thing you ever saw ##
+
+
+
+
