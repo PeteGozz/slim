@@ -34,31 +34,31 @@ For Operations::
 The Build Process
 -----------------
 
-Here is the short version_::
+Here is the short version::
 
   mkdir build
   cd ./build
   cmake ../  -DUSE_PAM=yes
 
-Step by step_
+Step by step
 
-1. Create_ a clean space to build the software::
+1. Create a clean space to build the software::
 
-  $ mkdir build
+    $ mkdir build
   
 *Optionally* edit the CMakefile.txt
 to adjust libraries and paths to your Operating System (if needed).
 For example:  CMAKE_INSTALL_PREFIX "/usr/local"
 
-2. Work_ from the clean dir::
+2. Work from the clean dir::
 
-  $ cd build
+     $ cd build
 
-3. Configure_ your final make files::
+3. Configure your final make files::
 
-    $ cmake ../
+     $ cmake ../
 
-Notes_:
+Notes:
 The above minimal instruction would be a reasonable first test.
 You will need some functionality :)
 
@@ -80,15 +80,17 @@ Or more probably not so::
      $ make
      $ ls
 
-Configure Stage notes_
+Configure Stage notes
+.....................
 
 Cmake caches assertively.
-It quite safe to remove the ./build/*cache files.
-Re-runs will rebuild them.
+It quite safe to remove the ./build/ level cache files.
+Re-runs do rebuild them.
 This approach extends to the clean build directory itself.
 On a project of this modest size the compile time is short.
-The debug time ? 
-     
+The debug time possibly less so ? 
+
+
 Simple test
 -----------
 
@@ -106,11 +108,11 @@ Also Consider current CMake settings:  CMAKE_INSTALL_PREFIX "/usr/local"
 
 The classic::
   
-  $ sudo make install
+     $ sudo make install
 
 Test the new system theme *from a running X session*::
-  
-  $ slim -p /usr/local/share/slim/themes/default
+
+     $ slim -p /usr/local/share/slim/themes/default
   
 
 Other

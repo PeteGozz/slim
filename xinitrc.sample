@@ -43,9 +43,12 @@ then
 	    # see also: ~/.config/openbox/autostart 
 	    exec $DBL openbox-session
 	    ;;
-	twm | dwm)
-	    # which are not related in the slightest
+	dwm )
 	    # it is OK to not have xbindkeys 
+	    xbindkeys || true  &
+	    xterm -e /bin/bash &
+	    exec $DBL dwm
+	twm )
 	    xbindkeys || true  &
 	    xterm -e /bin/bash &
 	    exec $DBL twm 
@@ -91,9 +94,9 @@ else
     exec $DBL $DEFAULT_SESSION       
 fi
 
-### never give up  ###
+### never give up and assuming one is on an actual tty ###
 if [ "$?" != "0" ]; then
-    echo -e "\ntry:\t xinit -- :$(tty | tr -d /dev/tty)"
+    echo -e "\ntry:\t xinit -- :$(tty | tr -d /dev/tty) or say :3"
     echo -e "or plain  startx "
 fi
 

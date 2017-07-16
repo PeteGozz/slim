@@ -1,11 +1,11 @@
 --------------------------
-Quick THEME howto for SLiM
+Quick THEME HowTo For SLiM
 --------------------------
 
 Some basic information regarding the slim theme format.
 Read this file if you plan to make some theme for
 the program. 
-Of course have a look at the included themes.
+*Of course have a look at any included themes*.
 
 
 GENERAL CONCEPT
@@ -26,7 +26,7 @@ SUPPORTED FORMATS
 -----------------
 
 - fonts::
-    use the xft font specs, ie: Verdana:size=16:bold
+    use the xft font specs, ie: Sans:size=16:bold
 - colors::
     use html hex format, ie #0066CC
 - positions::
@@ -35,9 +35,10 @@ SUPPORTED FORMATS
     + relative to the container.
     ie 50% is in the middle of the screen.
 
---------
+
 Examples
 --------
+
 The following is an example slim.theme ::
 
     # Color, font, position for the messages (e.g: shutting down)
@@ -70,7 +71,7 @@ The following is an example slim.theme ::
     input_pass_y            120
     
     # Input controls font and color
-    input_font              Verdana:size=12
+    input_font              Serif:size=12
     input_color             #000000
 
     # Welcome message position. (relative to the panel)
