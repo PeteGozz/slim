@@ -175,9 +175,16 @@ $ file slim
      for GNU/Linux 2.6.32,
      BuildID[sha1]=b44698a3baf559d0a79e517221c0ad6cea2b5504, not stripped
 
-Convenience Installable Archiver
+Convenience Install-able Archiver
 ---------------------------------
 From the build directory
 
 $ fakeroot cpack --config CPackConfig.cmake
+
+slim-uninstall.sh
+-----------------
+chmod +x or bash it
+Convenience Uninstall script simply uses the manifest.txt 
+file produced at install time. 
+Its a simple readable thing with little in the way of protection.
 
