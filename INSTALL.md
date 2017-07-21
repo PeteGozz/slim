@@ -1,9 +1,10 @@
 ---------------------------
----INSTALL file for SLiM---
+-- INSTALL file for SLiM --
 ---------------------------
 
 Prerequisites:
 --------------
+
    - cmake
    - X.org or XFree86
    - libxmu
@@ -16,7 +17,9 @@ Prerequisites:
    - libck-connector0
    - libdbus-1-3
 
-   (These should be auto-detected cached and reported at _initial_ cmake time.)
+
+    (These should be auto-detected cached
+     and reported at _initial_ cmake time.)
 
 External Applications
 ----------------------
@@ -58,12 +61,14 @@ For example:  CMAKE_INSTALL_PREFIX "/usr/local"
 
      $ cmake ../
 
-Notes:
-The above minimal instruction would be a reasonable first test.
-You will need some functionality :)
+*Notes*:
+
+The above minimal instruction would be a reasonable first test only.
+You will need some functionality.
 
 Configure Options
 -----------------
+
 This next incantation should get you a full build.
 With ConsoleKit and Desktop Bus support::
 
@@ -83,13 +88,12 @@ Or more probably not so::
 Configure Stage notes
 .....................
 
-Cmake caches assertively.
-It quite safe to remove the ./build/ level cache files.
-Re-runs do rebuild them.
-This approach extends to the clean build directory itself.
-On a project of this modest size the compile time is short.
-The debug time possibly less so ?
-
+- Cmake caches assertively.
+- It quite safe to remove the ./build/ level cache files.
+  Re-runs do rebuild them.
+  This approach extends to the clean build directory itself.
+- On a project of this modest size the compile time is short.
+  The debug time possibly less so ?
 
 Simple test
 -----------
@@ -165,6 +169,7 @@ Linked Libraries
 
 
 $ ldd slim
+$ objdump ./slim
 
 $ file slim
 
@@ -174,6 +179,7 @@ $ file slim
      dynamically linked, interpreter /lib/ld-linux.so.2,
      for GNU/Linux 2.6.32,
      BuildID[sha1]=b44698a3baf559d0a79e517221c0ad6cea2b5504, not stripped
+
 
 Convenience Installable Archiver
 ---------------------------------

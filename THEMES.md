@@ -18,7 +18,7 @@ A SLiM theme essentially consists of::
     - input box(es) and messages and their placement
 	and properties (slim.theme)
 
-    + The panel and background images can be a PNG or JPEG file.
+    + The panel and background images may be a PNG or JPEG file.
     + The panel is blended into the background image,
       taking care of alpha transparency.
 
@@ -26,14 +26,14 @@ SUPPORTED FORMATS
 -----------------
 
 - fonts::
-    use the xft font specs, ie: Sans:size=16:bold
+    use the xft font specs: e.g. Open Sans:size=12:bold
 - colors::
-    use html hex format, ie #0066CC
+    use html hex format: e.g.    #0066CC
 - positions::
     either
-    + absolute in pixels, ie 350
-    + relative to the container.
-    i.e. 50% is in the middle of the screen.
+    + absolute in pixels: e.g.   350
+    + relative to the container:
+    e.g. 50% is in the middle of the screen.
 
 
 Examples
@@ -41,15 +41,15 @@ Examples
 
 The following is an example slim.theme ::
 
-    # Color, font, position for the messages (e.g: shutting down)
+    # Color, font, position for ops  messages (e.g: shutting down)
     msg_color               #FFFFFF
     msg_font                Verdana:size=16:bold
     msg_x                   50%
     msg_y                   30
 
-    # Color, font, position for the session list
+    # Color, font, position for the Xsession list
     session_color           #FFFFFF
-    session_font            Verdana:size=16:bold
+    session_font            Sans:size=18:bold
     session_x               50%
     session_y               90%
 
@@ -57,14 +57,14 @@ The following is an example slim.theme ::
     background_style        stretch
     background_color	    #FF0033
 
-    # Horizonatal and vertical position for the panel.
+    # x Horizontal and y Vertical position for the panel.
     input_panel_x           50%
     input_panel_y           40%
 
     # input controls horizontal and vertical positions.
     # IMPORTANT! set input_pass_x and input_pass_y to -1
-    # to use a single input box for username/password (GDM Style).
-    # Note that this fields only accept absolute values.
+    # to use a single input box for username/password.
+    # Note: These fields only accept absolute values.
     input_name_x            40
     input_name_y            100
     input_pass_x            40
@@ -85,7 +85,7 @@ The following is an example slim.theme ::
     welcome_color		#d7dde8
 
     # 'Enter username' font and foreground/background color
-    username_font		Verdana:size=12
+    username_font		open sans:size=12
     username_color		#d7dde8
 
     # 'Enter username' and 'Enter password' position (relative to the panel)
@@ -118,11 +118,11 @@ to slim.conf::
 
     welcome_shadow_xoffset      -2
     welcome_shadow_yoffset      2
-    welcome_shadow_color        #ff0000
+    welcome_shadow_color        #cccccc
 
 
 
-The other keys are analogue::
+The other keys are analogous::
 
     # for username and password label
     username_shadow_xoffset	2
@@ -135,9 +135,9 @@ The other keys are analogue::
     input_shadow_color		#0000ff
 
     # for the messages:
-    msg_shadow_xoffset			1
-    msg_shadow_yoffset			1
-    msg_shadow_color			#ff00ff
+    msg_shadow_xoffset		1
+    msg_shadow_yoffset		1
+    msg_shadow_color		#ff00ff
 
     # For the session:
     session_shadow_xoffset     1

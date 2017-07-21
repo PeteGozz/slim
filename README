@@ -1,5 +1,5 @@
 --------------------------
----README file for SLiM---
+-- README file for SLiM --
 --------------------------
 
 Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
@@ -8,9 +8,11 @@ INTRODUCTION
 ------------
 
     SLiM (Simple Login Manager)
-	Is a graphical login manager for X11.
+    Is a graphical login manager for X11.
+
     It aims to be simple, fast and *independent* from the various
     desktop environments.
+
     SLiM was based on latest stable release of Login.app by Per Lidén.
 
 Features:
@@ -46,12 +48,12 @@ USAGE
     (commands configurable in the config file)::
 
       - console: start console login
-      - exit: exit SLiM
+      - exit: exit SLiM (drop to tty)
       - halt: halt the system
       - reboot: reboot the system
 
     Pressing the _F11_ key executes a *user-specified command*.
-    The default is to take a screenshot if the 'import'
+    The default is to take a screenshot if the 'scrot'
     program is available.
     (This is configurable in the /etc/slim.conf file)
 
