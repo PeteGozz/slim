@@ -70,7 +70,7 @@ set(common_srcs
 )
 if(USE_PAM)
 	set(common_srcs ${common_srcs} PAM.cpp)
-    # for now, only build slimlock if we are using PAM.
+    # Only build slimlock _if_ we are using PAM.
     set(BUILD_SLIMLOCK 1)
 endif(USE_PAM)
 
@@ -179,7 +179,7 @@ include_directories(
 
 target_link_libraries(libslim
     ${JPEG_LIBRARIES}
-	${PNG_LIBRARIES}
+    ${PNG_LIBRARIES}
 )
 
 #Set up library with all found packages for slim
@@ -199,8 +199,8 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 if(BUILD_SLIMLOCK)
-    #Set up library with all found packages for slimlock
-    target_link_libraries(slimlock
+  #Set up library with all found packages for slimlock
+  target_link_libraries(slimlock
         ${M_LIB}
         ${RT_LIB}
         ${CRYPTO_LIB}
@@ -241,7 +241,7 @@ install(FILES slim.1 DESTINATION ${MANDIR}/man1/)
 install(FILES slimlock.1 DESTINATION ${MANDIR}/man1/)
 # configure
 install(FILES slim.conf DESTINATION ${SYSCONFDIR})
-# harmless systemd service file
+# systemd service file: mostly harmless
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -257,7 +257,4 @@ set (CPACK_PACKAGE_VERSION_MINOR "${SLIM_VERSION_MINOR}")
 set (CPACK_PACKAGE_VERSION_PATCH "${SLIM_VERSION_PATCH}")
 include (CPack)
 ## its not the most beautiful thing you ever saw ##
-
-
-
 
