@@ -1,5 +1,5 @@
 ---------------------------
-   INSTALL file for SLiM 
+---INSTALL file for SLiM---
 ---------------------------
 
 Prerequisites:
@@ -9,9 +9,9 @@ Prerequisites:
    - libxmu
    - libpng
    - libjpeg
-   
+
    Optionally may also require:
-   
+
    - libpam0g  (required really)
    - libck-connector0
    - libdbus-1-3
@@ -22,7 +22,7 @@ External Applications
 ----------------------
 
 For Operations::
-  
+
     - At least one Window Manager or Desktop Environment to _login_ to.
       +  _F1_ Allows choice between installed environments.
     -  "console" Requires an  Xterm
@@ -36,16 +36,16 @@ The Build Process
 
 Here is the short version::
 
-  mkdir build ; 
-  cd ./build ; 
-  cmake ../  -DUSE_PAM=yes 
+  mkdir build ;
+  cd ./build ;
+  cmake ../  -DUSE_PAM=yes ;
 
 Step by step
 
 1. Create a clean space to build the software::
 
     $ mkdir build
-  
+
 *Optionally* edit the CMakefile.txt
 to adjust libraries and paths to your Operating System (if needed).
 For example:  CMAKE_INSTALL_PREFIX "/usr/local"
@@ -66,17 +66,17 @@ Configure Options
 -----------------
 This next incantation should get you a full build.
 With ConsoleKit and Desktop Bus support::
-  
-    $ cmake ../ -DUSE_PAM=yes -DUSE_CONSOLEKIT=yes   
+
+    $ cmake ../ -DUSE_PAM=yes -DUSE_CONSOLEKIT=yes
 
 To Disallow ConsoleKit  *(N.B. and by extension dbus)*
 and NOT build shared libraries::
 
     $ cmake ../ -DUSE_PAM=yes -DUSE_CONSOLEKIT=no -DBUILD_SHARED_LIBS=no
-    
+
 This is the stage you _may_ want to tweak the new make files.
 Or more probably not so::
-  
+
      $ make
      $ ls
 
@@ -88,52 +88,52 @@ It quite safe to remove the ./build/ level cache files.
 Re-runs do rebuild them.
 This approach extends to the clean build directory itself.
 On a project of this modest size the compile time is short.
-The debug time possibly less so ? 
+The debug time possibly less so ?
 
 
 Simple test
 -----------
 
  Test the freshly made executable::
-   
+
      $ ./slim -v
 
-	
+
 Installation
 ------------
- 
+
 The GNU Makefile produced by cmake has some interesting targets.
 Also Consider current CMake settings:  CMAKE_INSTALL_PREFIX "/usr/local"
 ** $ sudo make install/local  **  (may be reassuring.)
 
 The classic::
-  
+
      $ sudo make install
 
 Test the new system theme *from a running X session*::
 
      $ slim -p /usr/local/share/slim/themes/default
-  
+
 
 Other
 -----
 Some notes hints and paths from the wilds::
 
-     $ make clean 
+     $ make clean
      $ cmake --help
      $ make local/install
-	 
-(all run from the build directory) 
- 
+
+(all run from the build directory)
+
 Remove the "build" directory tree (only) to start over.
 
 Path Manifest
 -------------
 
 Here is a listing of typical installed paths
-as output by an "updating" run of "make install" 
+as output by an "updating" run of "make install"
 Notice *only rebuilt* files are re-installed ::
-   
+
     Install the project...
     /usr/bin/cmake -P cmake_install.cmake
     -- Install configuration: ""
@@ -159,8 +159,8 @@ Linked Libraries
 
 ::
 
-    -lfontconfig -lpam -ldbus-1 -lck-connector -lm -lrt 
-    -lcrypt -lX11 -lXft -lXrender -lXrandr -lXmu -lfreetype 
+    -lfontconfig -lpam -ldbus-1 -lck-connector -lm -lrt
+    -lcrypt -lX11 -lXft -lXrender -lXrandr -lXmu -lfreetype
     -ljpeg -lpng -lz libslim.so.1.3.6 -ljpeg -lpng -lz
 
 
@@ -175,16 +175,8 @@ $ file slim
      for GNU/Linux 2.6.32,
      BuildID[sha1]=b44698a3baf559d0a79e517221c0ad6cea2b5504, not stripped
 
-Convenience Install-able Archiver
+Convenience Installable Archiver
 ---------------------------------
 From the build directory
 
 $ fakeroot cpack --config CPackConfig.cmake
-
-slim-uninstall.sh
------------------
-chmod +x or bash it
-Convenience Uninstall script simply uses the manifest.txt 
-file produced at install time. 
-Its a simple readable thing with little in the way of protection.
-

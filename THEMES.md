@@ -4,7 +4,7 @@ Quick THEME HowTo For SLiM
 
 Some basic information regarding the slim theme format.
 Read this file if you plan to make some theme for
-the program. 
+the program.
 *Of course have a look at any included themes*.
 
 
@@ -12,12 +12,12 @@ GENERAL CONCEPT
 ---------------
 
 A SLiM theme essentially consists of::
-    
+
     - a background image (background.png or background.jpg)
     - a panel image (panel.png or panel.jpg)
     - input box(es) and messages and their placement
 	and properties (slim.theme)
-    
+
     + The panel and background images can be a PNG or JPEG file.
     + The panel is blended into the background image,
       taking care of alpha transparency.
@@ -30,7 +30,7 @@ SUPPORTED FORMATS
 - colors::
     use html hex format, ie #0066CC
 - positions::
-    either 
+    either
     + absolute in pixels, ie 350
     + relative to the container.
     i.e. 50% is in the middle of the screen.
@@ -60,7 +60,7 @@ The following is an example slim.theme ::
     # Horizonatal and vertical position for the panel.
     input_panel_x           50%
     input_panel_y           40%
-    
+
     # input controls horizontal and vertical positions.
     # IMPORTANT! set input_pass_x and input_pass_y to -1
     # to use a single input box for username/password (GDM Style).
@@ -69,7 +69,7 @@ The following is an example slim.theme ::
     input_name_y            100
     input_pass_x            40
     input_pass_y            120
-    
+
     # Input controls font and color
     input_font              Serif:size=12
     input_color             #000000
@@ -77,16 +77,16 @@ The following is an example slim.theme ::
     # Welcome message position. (relative to the panel)
     # use -1 for both values or comment the options to disable
     # the welcome message
-    welcome_x              	50%
-    welcome_y              	38
-    
+    welcome_x			50%
+    welcome_y			38
+
     # Font and color for the welcome message
-    welcome_font          	Verdana:size=16:bold:slant=italic
-    welcome_color          	#d7dde8
+    welcome_font		Verdana:size=16:bold:slant=italic
+    welcome_color		#d7dde8
 
     # 'Enter username' font and foreground/background color
-    username_font          	Verdana:size=12
-    username_color          	#d7dde8
+    username_font		Verdana:size=12
+    username_color		#d7dde8
 
     # 'Enter username' and 'Enter password' position (relative to the panel)
     #  use -1 for both values to disable the message
@@ -100,7 +100,7 @@ The following is an example slim.theme ::
     # is needed (ie, when already present in the panel image)
     username_msg            Please enter your username
     password_msg            Please enter your password
-    
+
 
 SHADOWS
 -------
@@ -110,7 +110,7 @@ support shadows;
 three values can be configured::
 
   - color: the shadow color
-  - x offset: the offset in x direction, relative to the normal text 
+  - x offset: the offset in x direction, relative to the normal text
   - y offset: the offset in y direction, relative to the normal text
 
 So to add a text shadow to the welcome message, add the following
@@ -121,29 +121,26 @@ to slim.conf::
     welcome_shadow_color        #ff0000
 
 
-    
+
 The other keys are analogue::
-    
+
     # for username and password label
-    username_shadow_xoffset 	2
-    username_shadow_yoffset 	-2
-    username_shadow_color   	#ff0000
+    username_shadow_xoffset	2
+    username_shadow_yoffset	-2
+    username_shadow_color	#ff0000
 
     # for the input fields
-    input_shadow_xoffset 	1
-    input_shadow_yoffset 	1
-    input_shadow_color   	#0000ff
+    input_shadow_xoffset	1
+    input_shadow_yoffset	1
+    input_shadow_color		#0000ff
 
     # for the messages:
-    msg_shadow_xoffset 		1    
-    msg_shadow_yoffset 		1    
-    msg_shadow_color   		#ff00ff
+    msg_shadow_xoffset			1
+    msg_shadow_yoffset			1
+    msg_shadow_color			#ff00ff
 
     # For the session:
-    session_shadow_xoffset     1    
-    session_shadow_yoffset     1    
+    session_shadow_xoffset     1
+    session_shadow_yoffset     1
     session_shadow_color       #ff00ff
     #end-----------------------------------------------------------------
-
-
-
