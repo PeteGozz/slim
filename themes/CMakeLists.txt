@@ -1,1 +1,1 @@
-subdirs (default)
+subdirs (default xamplar)
