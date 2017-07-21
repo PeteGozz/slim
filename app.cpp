@@ -1051,7 +1051,7 @@ void App::blankScreen()
 	XFreeGC(Dpy, gc);
 
 }
-
+/* Themeing Render Background */
 void App::setBackground(const string& themedir) {
 	string filename;
 	filename = themedir + "/background.png";
