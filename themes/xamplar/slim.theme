@@ -1,55 +1,72 @@
-# smokeprints theme
-
-# Panel position: cfgX cfgY 
-# "%" positions are from centre of referenced object
-# and relate to the entire screen
+#
+# smokeprints slim.theme
+#      Theme with obvious transparency and simple panel
+#      Intended for use as a fullsome template, rather than as is.
+# Peter Gossner 2017
+#
+# Panel Position
+#
+# "%" positions are generally at centre of referenced object
+# and relate to the entire screen not only the panel
+#
 input_panel_x           50%
 input_panel_y           50%
-
-# Panel Input Entry Fields
-
-input_font          	Open Sans:size=16:italic:dpi=96
-input_color             #aeaefb
-input_shadow_color      #fafafa 
 #
-# Username Interface Label 
-# 
-username_msg            Enter Account Username
-username_font          	Open Sans:size=16:italic:dpi=96
-username_color        	#f9f9f9
+# Panel Input Entry Fields
+# Font Defaults
+# See: The Input Field/Entry options below
+#
+input_font		Open Sans:size=16:italic:dpi=96
+input_color             #aeaefb
+input_shadow_color      #fafafa
+#
+# Username Interface Label
+#
+username_msg            Account Username
+username_font		Open Sans:size=16:italic:dpi=96
+username_color		#f9f9f9
 username_x              50%
 username_y              100
 username_shadow_color   #1b1b1f
 username_shadow_xoffset 1
 username_shadow_yoffset 2
-# user input field
+#
+# Username Input Field/Entry
+#
 input_name_x            222
 input_name_y            140
 input_shadow_xoffset    1
 input_shadow_yoffset    1
 
+#
 # Password Interface Label
-# (prints * per character)
-password_msg            Top Secret Secured Password
+#
+password_msg            Your Top-Secret Secured Password
 password_font           Open Sans:size=16:bold:dpi=96
 password_x              50%
 password_y              200
 password_shadow_color   #1b1b1f
 password_shadow_xoffset 2
 password_shadow_yoffset 2
-# password input field
-#  < 0 ( -1 ) or commenting out for single field and visa versa
-#  This theme will support either
+#
+# Password Input Field/Entry
+#
+#      For single field
+#      _x & _y < 0 (-1 or comment out).
+#      This theme will support one or two Fields.
+#      (the Password Label is below the entry)
+#
 input_pass_x            -1
 input_pass_y            -1
-#input_pass_x            222
-#input_pass_y            240
-
-
+#input_pass_x           222
+#input_pass_y           240
+#
 # Welcome Message
-# any absolute values will place this on panel
-# % values locate from object center
-welcome_msg      Login to %host 
+#
+#     Any absolute values will place this on panel
+#     % values locate from object center
+#
+welcome_msg      Login to %host
 welcome_x        50%
 welcome_y        40
 welcome_font     Open Sans:size=22:bold:dpi=96
@@ -57,29 +74,34 @@ welcome_color    #dadada
 welcome_shadow_color #1a1a4a
 welcome_shadow_xoffset 1
 welcome_shadow_yoffset 2
-
+#
 # Informative State Messages
-# above the panel
-msg_font         Open Sans:size=18:italic:dpi=96
+#
+#    e.g. "system rebooting now"
+#
+msg_font         Open Sans:size=16:italic:dpi=96
 msg_x            50%
 msg_y            10%
 msg_color        #dadaea
 msg_shadow_color #2a2a1a
 msg_shadow_xoffset 1
 msg_shadow_yoffset 2
-
-
+#
 # Intro Message
-
-intro_msg        Dial [ F1 ] and Drive Devuan Safely
+#  (! still to be understood)
+#
+intro_msg        Dial [ F1 ] and Drive Safely
 intro_font       Open Sans:size=32:dpi=96
 intro_color      #ffffff
 intro_x          200
 intro_y          10
-
-# Session Switching is on the background
-# not the panel
-session_msg      Xsession::  
+#
+# Session Switching Choosing
+#
+#    Sets on the background
+#    not  on the panel
+#
+session_msg      Xsession::
 session_font     Open Sans:size=16:bold:dpi=96
 session_x        20%
 session_y        88%
@@ -87,15 +109,13 @@ session_color          #cadaea
 session_shadow_color   #1a1a1a
 session_shadow_xoffset 2
 session_shadow_yoffset 2
-
-#### Background ####
-# load an image 
-# valid values: stretch tile center 
+#
+# Background Treatment
+#
+#     Loads the background.{png||jpg} image
+#     Valid values one of :
+#      stretch tile center
+#
 background_style        stretch
-# with background colour for "center" or image fails.
+# background colour for "center" or image fails/unset.
 background_color        #fafc2f
-
-
-
-
-

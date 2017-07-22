@@ -26,7 +26,7 @@ using namespace std;
 typedef pair<string,string> option;
 
 Cfg::Cfg()
-	: currentSession(-1)
+        : currentSession(-1)
 {
 	/* Configuration options */
 	options.insert(option("default_path","/bin:/usr/bin:/usr/local/bin"));
@@ -81,7 +81,7 @@ Cfg::Cfg()
 	options.insert(option("welcome_shadow_xoffset", "0"));
 	options.insert(option("welcome_shadow_yoffset", "0"));
 	options.insert(option("welcome_shadow_color","#FFFFFF"));
-
+        /* intro messages in process *=*/
 	options.insert(option("intro_msg","... Left Turn Ahead ..."));
 	options.insert(option("intro_font","Sans:size=14"));
 	options.insert(option("intro_color","#FFFFFF"));
