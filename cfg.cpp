@@ -44,7 +44,7 @@ Cfg::Cfg()
 	options.insert(option("console_cmd","/usr/bin/xterm -C -fg white -bg black +sb -g %dx%d+%d+%d -fn %dx%d -T ""Console login"" -e /bin/sh -c ""/bin/cat /etc/issue; exec /bin/login"""));
 	options.insert(option("screenshot_cmd","import -window root /slim.png"));
 	options.insert(option("welcome_msg","Welcome to %host"));
-	options.insert(option("session_msg","Session:"));
+	options.insert(option("session_msg","XSession:"));
 	options.insert(option("default_user",""));
 	options.insert(option("focus_password","no"));
 	options.insert(option("auto_login","no"));
@@ -62,18 +62,19 @@ Cfg::Cfg()
 	options.insert(option("input_panel_y","40%"));
 	options.insert(option("input_name_x","200"));
 	options.insert(option("input_name_y","154"));
-	options.insert(option("input_pass_x","-1")); /* default is single inputbox */
+	/* default is single inputbox */
+	options.insert(option("input_pass_x","-1")); 
 	options.insert(option("input_pass_y","-1"));
-	options.insert(option("input_font","Verdana:size=11"));
+	options.insert(option("input_font","Sans:size=12"));
 	options.insert(option("input_color", "#000000"));
-	options.insert(option("input_cursor_height","20"));
+	options.insert(option("input_cursor_height","22"));
 	options.insert(option("input_maxlength_name","20"));
 	options.insert(option("input_maxlength_passwd","20"));
 	options.insert(option("input_shadow_xoffset", "0"));
 	options.insert(option("input_shadow_yoffset", "0"));
 	options.insert(option("input_shadow_color","#FFFFFF"));
 
-	options.insert(option("welcome_font","Verdana:size=14"));
+	options.insert(option("welcome_font","Sans:size=14"));
 	options.insert(option("welcome_color","#FFFFFF"));
 	options.insert(option("welcome_x","-1"));
 	options.insert(option("welcome_y","-1"));
@@ -81,8 +82,8 @@ Cfg::Cfg()
 	options.insert(option("welcome_shadow_yoffset", "0"));
 	options.insert(option("welcome_shadow_color","#FFFFFF"));
 
-	options.insert(option("intro_msg",""));
-	options.insert(option("intro_font","Verdana:size=14"));
+	options.insert(option("intro_msg","... Left Turn Ahead ..."));
+	options.insert(option("intro_font","Sans:size=14"));
 	options.insert(option("intro_color","#FFFFFF"));
 	options.insert(option("intro_x","-1"));
 	options.insert(option("intro_y","-1"));
@@ -90,7 +91,7 @@ Cfg::Cfg()
 	options.insert(option("background_style","stretch"));
 	options.insert(option("background_color","#CCCCCC"));
 
-	options.insert(option("username_font","Verdana:size=12"));
+	options.insert(option("username_font","Sans:size=12"));
 	options.insert(option("username_color","#FFFFFF"));
 	options.insert(option("username_x","-1"));
 	options.insert(option("username_y","-1"));
@@ -104,7 +105,7 @@ Cfg::Cfg()
 	options.insert(option("password_msg","Please enter your password"));
 
 	options.insert(option("msg_color","#FFFFFF"));
-	options.insert(option("msg_font","Verdana:size=16:bold"));
+	options.insert(option("msg_font","Sans:size=16:bold"));
 	options.insert(option("msg_x","40"));
 	options.insert(option("msg_y","40"));
 	options.insert(option("msg_shadow_xoffset", "0"));
@@ -112,21 +113,21 @@ Cfg::Cfg()
 	options.insert(option("msg_shadow_color","#FFFFFF"));
 
 	options.insert(option("session_color","#FFFFFF"));
-	options.insert(option("session_font","Verdana:size=16:bold"));
+	options.insert(option("session_font","Sans:size=16:bold"));
 	options.insert(option("session_x","50%"));
 	options.insert(option("session_y","90%"));
 	options.insert(option("session_shadow_xoffset", "0"));
 	options.insert(option("session_shadow_yoffset", "0"));
 	options.insert(option("session_shadow_color","#FFFFFF"));
 
-	// slimlock-specific options
+	// slimlock-specific options // 
 	options.insert(option("dpms_standby_timeout", "60"));
 	options.insert(option("dpms_off_timeout", "600"));
 	options.insert(option("wrong_passwd_timeout", "2"));
 	options.insert(option("passwd_feedback_x", "50%"));
-	options.insert(option("passwd_feedback_y", "10%"));
+	options.insert(option("passwd_feedback_y", "15%"));
 	options.insert(option("passwd_feedback_msg", "Authentication failed"));
-	options.insert(option("passwd_feedback_capslock", "Authentication failed (CapsLock is on)"));
+	options.insert(option("passwd_feedback_capslock", "CAPSLOCK is ON"));
 	options.insert(option("show_username", "1"));
 	options.insert(option("show_welcome_msg", "0"));
 	options.insert(option("tty_lock", "1"));
