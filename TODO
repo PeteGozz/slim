@@ -18,13 +18,25 @@
 2.0.x
 -----
 - restart X server on ctrl-alt-backspace
--- works here. May be a side effect, Needs validation.
+  -- works here. May be a side effect, Needs validation.
+
 - allow switching theme on the fly if a set is specified in slim.conf
+  --  low priority
+  
 - text alignment, to allow to center texts of unknown length (e.g. %host)
+   percent seems to scope most of that
+   
+- re-instate (?) capslock warning
+
+- re-work all messaging for slimlock
+    -- user name placement
+    -- disable F1
+    -- test reboot etal
+     
 
 Devuan Preparations
 -------------------
      - Move documentation to rst
        MarkDown as side effect for git sites may be useful.
      -- This is reasonable at the moment.
-     
+       
