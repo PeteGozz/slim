@@ -11,16 +11,23 @@ the program.
 GENERAL CONCEPT
 ---------------
 
-A SLiM theme essentially consists of::
+A SLiM theme essentially consists of ::
 
-    - a background image (background.png or background.jpg)
-    - a panel image (panel.png or panel.jpg)
-    - input box(es) and messages and their placement
-	and properties (slim.theme)
+    - a background image
+      named: background.png or background.jpg
 
-    + The panel and background images may be a PNG or JPEG file.
-    + The panel is blended into the background image,
-      taking care of alpha transparency.
+    - a panel image
+      named: panel.png or panel.jpg
+
+    - input box(es) and messages
+      their placement and properties
+      named: slim.theme
+
+    The panel and background images may be a PNG or JPEG file.
+    The panel is blended into the background image,
+    taking care of alpha transparency.
+    Background colour is used for centered images and defaults
+    
 
 SUPPORTED FORMATS
 -----------------
@@ -57,7 +64,7 @@ The following is an example slim.theme ::
     background_style        stretch
     background_color	    #FF0033
 
-    # x Horizontal and y Vertical position for the panel.
+    # _x Horizontal and _y Vertical position for the panel.
     input_panel_x           50%
     input_panel_y           40%
 
@@ -71,7 +78,7 @@ The following is an example slim.theme ::
     input_pass_y            120
 
     # Input controls font and color
-    input_font              Serif:size=12
+    input_font              Open Sans:size=12
     input_color             #000000
 
     # Welcome message position. (relative to the panel)
@@ -81,7 +88,7 @@ The following is an example slim.theme ::
     welcome_y			38
 
     # Font and color for the welcome message
-    welcome_font		Verdana:size=16:bold:slant=italic
+    welcome_font		gothic:size=16:bold:slant=italic
     welcome_color		#d7dde8
 
     # 'Enter username' font and foreground/background color
@@ -109,7 +116,7 @@ The 'msg', 'input', 'welcome', 'session' and 'username' sections
 support shadows;
 three values can be configured::
 
-  - color: the shadow color
+  - color: the shadow color 
   - x offset: the offset in x direction, relative to the normal text
   - y offset: the offset in y direction, relative to the normal text
 
@@ -143,4 +150,33 @@ The other keys are analogous::
     session_shadow_xoffset     1
     session_shadow_yoffset     1
     session_shadow_color       #ff00ff
-    #end-----------------------------------------------------------------
+
+
+Fonts by Tasking
+----------------
+
+slim.theme and admin settable in slim.conf.
+
+::
+  
+    font   "input_font"    
+             Font used for describing the entry fields.
+	
+    welcomefont    "welcome_font"
+             Font used to write the Welcome Message. Often %hostname goes here.
+	     
+    hintsfont    "hints_font"
+             Used along with the site Welcome Message.
+	     Or perhaps in its place.
+	     
+    enterfont    "username_font"
+            Font used to represent user inputs.
+
+    msgfont    "msg_font"
+          Font used to print error or other informative messages.
+	  Usually after closing entry fields.
+	  
+
+
+
+
