@@ -1,56 +1,69 @@
 #
-# smokeprints slim.theme
-#      Theme with obvious transparency and simple panel
-#      Intended for use as a fullsome template, rather than as is.
+# slim.theme xamplar
+#      stretchable centerable and badly tilable Theme
+#      with transparency and simple panel.
+#      useable and friendly colours ...
+#      Intended for use as a template, rather than as is.
 # Peter Gossner 2017
+
+
 #
-# Panel Position
+# Background Treatment
 #
+#     Loads the background.{png||jpg} image
+#         Valid values one of :
+#         stretch tile center
+#      
+background_style        stretch
+# background colour for "center" or image fails/unset.
+background_color        #00003f
+#
+# Panel::  Position
+# The panel is called panel.png or jpg.
 # "%" positions are generally at centre of referenced object
 # and relate to the entire screen not only the panel
 #
 input_panel_x           50%
 input_panel_y           50%
 #
-# Panel Input Entry Fields
-# Font Defaults
+# Panel:: Input Entry Fields
 # See: The Input Field/Entry options below
 #
 input_font		Open Sans:size=16:italic:dpi=96
-input_color             #aeaefb
-input_shadow_color      #fafafa
+input_color             #fafaff
+input_shadow_color      #111111
 #
-# Username Interface Label
+# Username Interface Label / Message 
 #
 username_msg            Account Username
-username_font		Open Sans:size=16:italic:dpi=96
-username_color		#f9f9f9
+username_font		Open Sans:size=18:italic:dpi=96
 username_x              50%
 username_y              100
-username_shadow_color   #1b1b1f
-username_shadow_xoffset 1
-username_shadow_yoffset 2
+username_color		#faaafa
+username_shadow_color   #00003f
+username_shadow_xoffset 2
+username_shadow_yoffset 1
 #
 # Username Input Field/Entry
-#
+# the typed text
 input_name_x            222
 input_name_y            140
 input_shadow_xoffset    1
 input_shadow_yoffset    1
-
 #
-# Password Interface Label
+# Password Interface Label / message / nag
 #
 password_msg            Your Top-Secret Secured Password
-password_font           Open Sans:size=16:bold:dpi=96
+password_font           Open Sans:size=14:bold:dpi=96
 password_x              50%
 password_y              200
-password_shadow_color   #1b1b1f
+password_color		#faaafa
+password_shadow_color   #000000
 password_shadow_xoffset 2
 password_shadow_yoffset 2
 #
 # Password Input Field/Entry
-#
+#  typed asterisks 
 #      For single field
 #      _x & _y < 0 (-1 or comment out).
 #      This theme will support one or two Fields.
@@ -68,12 +81,12 @@ input_pass_y            -1
 #
 welcome_msg      Login to %host
 welcome_x        50%
-welcome_y        40
+welcome_y        44
 welcome_font     Open Sans:size=22:bold:dpi=96
-welcome_color    #dadada
-welcome_shadow_color #1a1a4a
-welcome_shadow_xoffset 1
-welcome_shadow_yoffset 2
+welcome_color    #dadaff
+welcome_shadow_color #00004a
+welcome_shadow_xoffset 2
+welcome_shadow_yoffset 3
 #
 # Informative State Messages
 #
@@ -87,17 +100,8 @@ msg_shadow_color #2a2a1a
 msg_shadow_xoffset 1
 msg_shadow_yoffset 2
 #
-# Intro Message
-#  (! still to be understood)
-#
-intro_msg        Dial [ F1 ] and Drive Safely
-intro_font       Open Sans:size=32:dpi=96
-intro_color      #ffffff
-intro_x          200
-intro_y          10
-#
 # Session Switching Choosing
-#
+#           F1
 #    Sets on the background
 #    not  on the panel
 #
@@ -110,12 +114,11 @@ session_shadow_color   #1a1a1a
 session_shadow_xoffset 2
 session_shadow_yoffset 2
 #
-# Background Treatment
+# Intro Message
+#  (! still to be understood)
 #
-#     Loads the background.{png||jpg} image
-#     Valid values one of :
-#      stretch tile center
-#
-background_style        stretch
-# background colour for "center" or image fails/unset.
-background_color        #fafc2f
+## intro_msg        Dial [ F1 ] and Drive Safely
+## intro_font       Open Sans:size=32:dpi=96
+## intro_color      #ffffff
+## intro_x          200
+## intro_y          10
