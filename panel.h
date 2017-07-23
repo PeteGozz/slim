@@ -98,11 +98,11 @@ private:
 	bool OnKeyPress(XEvent& event);
 	void ShowText();
 	void ShowSession();
-
+	void ShowHintsMessage();
 	void SlimDrawString8(XftDraw *d, XftColor *color, XftFont *font,
-							int x, int y, const std::string &str,
-							XftColor *shadowColor,
-							int xOffset, int yOffset);
+			     int x, int y, const std::string &str,
+			     XftColor *shadowColor,
+			     int xOffset, int yOffset);
 
 	Rectangle GetPrimaryViewport();
 	void ApplyBackground(Rectangle = Rectangle());
@@ -123,8 +123,9 @@ private:
 	XftColor msgcolor;
 	XftColor msgshadowcolor;
 	XftFont *msgfont;
-	XftColor introcolor;
-	XftFont *introfont;
+	XftColor hintsshadowcolor;
+	XftColor hintscolor;
+	XftFont *hintsfont;
 	XftFont *welcomefont;
 	XftColor welcomecolor;
 	XftFont *sessionfont;
@@ -160,8 +161,11 @@ private:
 	int welcome_shadow_yoffset;
 	int session_shadow_xoffset;
 	int session_shadow_yoffset;
-	int intro_x;
-	int intro_y;
+	int hints_x;
+	int hints_y;
+	int hints_shadow_color;
+	int hints_shadow_xoffset;
+	int hints_shadow_yoffset;
 	int username_x;
 	int username_y;
 	int username_shadow_xoffset;
@@ -169,20 +173,20 @@ private:
 	int password_x;
 	int password_y;
 	std::string welcome_message;
-	std::string intro_message;
+	std::string hints_message;
 
 	/* Pixmap data */
 	Pixmap PanelPixmap;
 
 	Image *image;
 
-	/* For thesting themes */
+	/* For testing themes */
 	bool testing;
 	std::string themedir;
 
 	/* Session handling */
 	std::string session_name;
-    std::string session_exec;
+	std::string session_exec;
 };
 
 #endif /* _PANEL_H_ */

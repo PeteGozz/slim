@@ -165,7 +165,7 @@ slim.theme and admin settable in slim.conf.
     welcomefont    "welcome_font"
              Font used to write the Welcome Message. Often %hostname goes here.
 	     
-    introfont    "intro_font"
+    hintsfont    "hints_font"
              Used along with the site Welcome Message.
 	     Or perhaps in its place.
 	     

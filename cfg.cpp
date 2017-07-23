@@ -56,8 +56,7 @@ Cfg::Cfg()
 	options.insert(option("reboot_msg","The system is rebooting..."));
 	options.insert(option("sessiondir",""));
 	options.insert(option("hidecursor","false"));
-
-	/* Theme stuff */
+	/* Theme */
 	options.insert(option("input_panel_x","50%"));
 	options.insert(option("input_panel_y","40%"));
 	options.insert(option("input_name_x","200"));
@@ -73,7 +72,7 @@ Cfg::Cfg()
 	options.insert(option("input_shadow_xoffset", "0"));
 	options.insert(option("input_shadow_yoffset", "0"));
 	options.insert(option("input_shadow_color","#FFFFFF"));
-
+	/* welcome message defaults */
 	options.insert(option("welcome_font","Sans:size=14"));
 	options.insert(option("welcome_color","#FFFFFF"));
 	options.insert(option("welcome_x","-1"));
@@ -81,13 +80,17 @@ Cfg::Cfg()
 	options.insert(option("welcome_shadow_xoffset", "0"));
 	options.insert(option("welcome_shadow_yoffset", "0"));
 	options.insert(option("welcome_shadow_color","#FFFFFF"));
-        /* intro messages in process *=*/
-	options.insert(option("intro_msg","... Left Turn Ahead ..."));
-	options.insert(option("intro_font","Sans:size=14"));
-	options.insert(option("intro_color","#FFFFFF"));
-	options.insert(option("intro_x","-1"));
-	options.insert(option("intro_y","-1"));
+        /* hints messages in process */
 
+	options.insert(option("hints_msg","[F1] for Xsessions"));
+	options.insert(option("hints_font","Sans:size=14"));
+	options.insert(option("hints_color","#FFFFFF"));
+	options.insert(option("hints_x","-1"));
+	options.insert(option("hints_y","-1"));
+	options.insert(option("hints_shadow_xoffset", "1"));
+	options.insert(option("hints_shadow_yoffset", "1"));
+	options.insert(option("hints_shadow_color", "#dedead"));
+	/* background defaults */
 	options.insert(option("background_style","stretch"));
 	options.insert(option("background_color","#CCCCCC"));
 
@@ -295,56 +298,56 @@ void Cfg::fillSessionList(){
 	sessions.clear();
 
 	if( !strSessionDir.empty() ) {
-		DIR *pDir = opendir(strSessionDir.c_str());
-
-		if (pDir != NULL) {
-			struct dirent *pDirent = NULL;
-
-			while ((pDirent = readdir(pDir)) != NULL) {
-				string strFile(strSessionDir);
-				strFile += "/";
-				strFile += pDirent->d_name;
-
-				struct stat oFileStat;
-
-				if (stat(strFile.c_str(), &oFileStat) == 0) {
-					if (S_ISREG(oFileStat.st_mode) &&
-							access(strFile.c_str(), R_OK) == 0){
-						ifstream desktop_file(strFile.c_str());
-						if (desktop_file){
-							 string line, session_name = "", session_exec = "";
-							 while (getline( desktop_file, line )) {
-								 if (line.substr(0, 5) == "Name=") {
-									 session_name = line.substr(5);
-									 if (!session_exec.empty())
-										 break;
-								 } else
-									 if (line.substr(0, 5) == "Exec=") {
-										 session_exec = line.substr(5);
-										 if (!session_name.empty())
-											 break;
-									 }
-							 }
-							 desktop_file.close();
-							 pair<string,string> session(session_name,session_exec);
-							 sessions.push_back(session);
-							 cout << session_exec << " - " << session_name << endl;
-						}
-
-					}
-				}
+	  DIR *pDir = opendir(strSessionDir.c_str());
+	  
+	  if (pDir != NULL) {
+	    struct dirent *pDirent = NULL;
+	    
+	    while ((pDirent = readdir(pDir)) != NULL) {
+	      string strFile(strSessionDir);
+	      strFile += "/";
+	      strFile += pDirent->d_name;
+	      
+	      struct stat oFileStat;
+	      
+	      if (stat(strFile.c_str(), &oFileStat) == 0) {
+		if (S_ISREG(oFileStat.st_mode) &&
+		    access(strFile.c_str(), R_OK) == 0){
+		  ifstream desktop_file(strFile.c_str());
+		  if (desktop_file){
+		    string line, session_name = "", session_exec = "";
+		    while (getline( desktop_file, line )) {
+		      if (line.substr(0, 5) == "Name=") {
+			session_name = line.substr(5);
+			if (!session_exec.empty())
+			  break;
+		      } else
+			if (line.substr(0, 5) == "Exec=") {
+			  session_exec = line.substr(5);
+			  if (!session_name.empty())
+			    break;
 			}
-			closedir(pDir);
+		    }
+		    desktop_file.close();
+		    pair<string,string> session(session_name,session_exec);
+		    sessions.push_back(session);
+		    cout << session_exec << " - " << session_name << endl;
+		  }
+		  
 		}
+	      }
+	    }
+	    closedir(pDir);
+	  }
 	}
-
+	
 	if (sessions.empty()){
-		pair<string,string> session("","");
-		sessions.push_back(session);
+	  pair<string,string> session("","");
+	  sessions.push_back(session);
 	}
 }
 
 pair<string,string> Cfg::nextSession() {
-	currentSession = (currentSession + 1) % sessions.size();
-	return sessions[currentSession];
+  currentSession = (currentSession + 1) % sessions.size();
+  return sessions[currentSession];
 }

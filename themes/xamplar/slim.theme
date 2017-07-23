@@ -50,6 +50,7 @@ input_name_x            222
 input_name_y            140
 input_shadow_xoffset    1
 input_shadow_yoffset    1
+
 #
 # Password Interface Label / message / nag
 #
@@ -107,18 +108,23 @@ msg_shadow_yoffset 2
 #
 session_msg      Xsession::
 session_font     Open Sans:size=16:bold:dpi=96
-session_x        20%
+session_x        50%
 session_y        88%
 session_color          #cadaea
 session_shadow_color   #1a1a1a
 session_shadow_xoffset 2
 session_shadow_yoffset 2
 #
-# Intro Message
-#  (! still to be understood)
+# Intro and Hints Message
+#  On the root screen
 #
-## intro_msg        Dial [ F1 ] and Drive Safely
-## intro_font       Open Sans:size=32:dpi=96
-## intro_color      #ffffff
-## intro_x          200
-## intro_y          10
+hints_msg        Press [F1] for more Xsessions
+hints_font       Open Sans:size=12:dpi=96
+hints_color      #ffffff
+# shadow needs fix
+hints_shadow_color #00005c
+# % or int OK 
+hints_x          50%
+hints_y          90%
+hints_shadow_xoffset 1
+hints_shadow_xoffset 1

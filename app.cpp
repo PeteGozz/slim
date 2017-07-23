@@ -157,7 +157,7 @@ App::App(int argc, char** argv)
 		case 'd':	/* Daemon mode */
 			daemonmode = true;
 			break;
-		case 'n':	/* Daemon mode */
+		case 'n':	/*not  Daemon mode */
 			daemonmode = false;
 			force_nodaemon = true;
 			break;
