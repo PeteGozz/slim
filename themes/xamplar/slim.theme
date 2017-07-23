@@ -1,11 +1,11 @@
 #
-# slim.theme xamplar
-#      stretchable centerable and badly tilable Theme
-#      with transparency and simple panel.
-#      useable and friendly colours ...
+# slim.theme  xamplar
+# 
+#      stretchable centerable and almost tilable theme
+#      with transparency and clean simple panel.
+#      
 #      Intended for use as a template, rather than as is.
-# Peter Gossner 2017
-
+#      Peter Gossner 2017 placed under the GPL3 (or later) 
 
 #
 # Background Treatment
@@ -23,13 +23,13 @@ background_color        #00003f
 # "%" positions are generally at centre of referenced object
 # and relate to the entire screen not only the panel
 #
-input_panel_x           50%
-input_panel_y           50%
+input_panel_x    50%
+input_panel_y    50%
 #
 # Panel:: Input Entry Fields
 # See: The Input Field/Entry options below
 #
-input_font		Open Sans:size=16:italic:dpi=96
+input_font  Open Sans:size=16:italic:dpi=96
 input_color             #fafaff
 input_shadow_color      #111111
 #
@@ -50,12 +50,11 @@ input_name_x            222
 input_name_y            140
 input_shadow_xoffset    1
 input_shadow_yoffset    1
-
 #
 # Password Interface Label / message / nag
 #
-password_msg            Your Top-Secret Secured Password
-password_font           Open Sans:size=14:bold:dpi=96
+password_msg   Your Top-Secret Secured Password
+password_font  Open Sans:size=14:bold:dpi=96
 password_x              50%
 password_y              200
 password_color		#faaafa
@@ -84,8 +83,8 @@ welcome_msg      Login to %host
 welcome_x        50%
 welcome_y        44
 welcome_font     Open Sans:size=22:bold:dpi=96
-welcome_color    #dadaff
-welcome_shadow_color #00004a
+welcome_color          #dadaff
+welcome_shadow_color   #00004a
 welcome_shadow_xoffset 2
 welcome_shadow_yoffset 3
 #
@@ -93,19 +92,19 @@ welcome_shadow_yoffset 3
 #
 #    e.g. "system rebooting now"
 #
-msg_font         Open Sans:size=16:italic:dpi=96
-msg_x            50%
-msg_y            10%
-msg_color        #dadaea
-msg_shadow_color #2a2a1a
+msg_font   Open Sans:size=16:italic:dpi=96
+msg_x              50%
+msg_y              10%
+msg_color          #dadaea
+msg_shadow_color   #2a2a1a
 msg_shadow_xoffset 1
 msg_shadow_yoffset 2
 #
-# Session Switching Choosing
+# Login XSession Choices
 #           F1
 #    Sets on the background
-#    not  on the panel
-#
+#    rather than the panel
+#    Not for slimlock 
 session_msg      Xsession::
 session_font     Open Sans:size=16:bold:dpi=96
 session_x        50%
@@ -115,16 +114,31 @@ session_shadow_color   #1a1a1a
 session_shadow_xoffset 2
 session_shadow_yoffset 2
 #
-# Intro and Hints Message
+# Hints and Intro Messages
 #  On the root screen
 #
-hints_msg        Press [F1] for more Xsessions
+hints_msg            Press [F1] for more Xsessions
+# % or int tested OK 
+hints_x              50%
+hints_y              90%
 hints_font       Open Sans:size=12:dpi=96
-hints_color      #ffffff
-# shadow needs fix
-hints_shadow_color #00005c
-# % or int OK 
-hints_x          50%
-hints_y          90%
+hints_color          #ffffff
+hints_shadow_color   #00005c
 hints_shadow_xoffset 1
 hints_shadow_xoffset 1
+#
+#### slimlock options ####
+#
+dpms_standby_timeout      60
+dpms_off_timeout          1200
+wrong_passwd_timeout       2
+passwd_feedback_x         50%
+passwd_feedback_y         70%
+passwd_feedback_msg       Authentication has Failed
+# this functionallity to be restored
+passwd_feedback_capslock  CaPsLocK is ON
+show_username              1
+show_welcome_msg           1
+tty_lock                   1
+bell                       0
+
