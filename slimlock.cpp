@@ -42,7 +42,7 @@ void setBackground(const string& themedir);
 void HideCursor();
 bool AuthenticateUser();
 static int ConvCallback(int num_msgs, const struct pam_message **msg,
-						struct pam_response **resp, void *appdata_ptr);
+			struct pam_response **resp, void *appdata_ptr);
 string findValidRandomTheme(const string& set);
 void HandleSignal(int sig);
 void *RaiseWindow(void *data);
@@ -92,9 +92,9 @@ int main(int argc, char **argv) {
 
 	// try /run/lock first, since i believe it's preferred
 	if (!stat("/run/lock", &statbuf))
-		lock_file = open("/run/lock/"APPNAME".lock", O_CREAT | O_RDWR, 0666);
+	  lock_file = open("/run/lock/"APPNAME".lock", O_CREAT | O_RDWR, 0666);
 	else
-		lock_file = open("/var/lock/"APPNAME".lock", O_CREAT | O_RDWR, 0666);
+	  lock_file = open("/var/lock/"APPNAME".lock", O_CREAT | O_RDWR, 0666);
 
 	int rc = flock(lock_file, LOCK_EX | LOCK_NB);
 
@@ -124,17 +124,17 @@ int main(int argc, char **argv) {
 		themedir =  themebase + themeName;
 		themefile = themedir + THEMESFILE;
 		if (!cfg->readConf(themefile)) {
-			if (themeName == "default") {
-				cerr << APPNAME << ": Failed to open default theme file "
-					 << themefile << endl;
-				exit(ERR_EXIT);
-			} else {
-				cerr << APPNAME << ": Invalid theme in config: "
-					 << themeName << endl;
-				themeName = "default";
-			}
+		  if (themeName == "default") {
+		    cerr << APPNAME << ": Failed to open default theme file "
+			 << themefile << endl;
+		    exit(ERR_EXIT);
+		  } else {
+		    cerr << APPNAME << ": Invalid theme in config: "
+			 << themeName << endl;
+		    themeName = "default";
+		  }
 		} else {
-			loaded = true;
+		  loaded = true;
 		}
 	}
 
@@ -168,10 +168,9 @@ int main(int argc, char **argv) {
 
 	XFlush(dpy);
 	for (int len = 1000; len; len--) {
-		if(XGrabKeyboard(dpy, root, True, GrabModeAsync, GrabModeAsync, CurrentTime)
-			== GrabSuccess)
-			break;
-		usleep(1000);
+	  if(XGrabKeyboard(dpy, root, True, GrabModeAsync, GrabModeAsync, CurrentTime == GrabSuccess ))
+	    break;
+	  usleep(1000);
 	}
 	XSelectInput(dpy, win, ExposureMask | KeyPressMask);
 
@@ -184,15 +183,15 @@ int main(int argc, char **argv) {
 	int ret = pam_start(APPNAME, loginPanel->GetName().c_str(), &conv, &pam_handle);
 	// If we can't start PAM, just exit because slimlock won't work right
 	if (ret != PAM_SUCCESS)
-		die("PAM: %s\n", pam_strerror(pam_handle, ret));
+	  die("PAM: %s\n", pam_strerror(pam_handle, ret));
 
 	// disable tty switching
 	if(cfg->getOption("tty_lock") == "1") {
-		if ((term = open("/dev/console", O_RDWR)) == -1)
-			perror("error opening console");
+	  if ((term = open("/dev/console", O_RDWR)) == -1)
+	    perror("error opening console");
 
-		if ((ioctl(term, VT_LOCKSWITCH)) == -1)
-			perror("error locking console");
+	  if ((ioctl(term, VT_LOCKSWITCH)) == -1)
+	    perror("error locking console");
 	}
 
 	// Set up DPMS
@@ -201,14 +200,12 @@ int main(int argc, char **argv) {
 	cfg_dpms_off = Cfg::string2int(cfg->getOption("dpms_off_timeout").c_str());
 	using_dpms = DPMSCapable(dpy) && (cfg_dpms_standby > 0);
 	if (using_dpms) {
-		DPMSGetTimeouts(dpy, &dpms_standby, &dpms_suspend, &dpms_off);
-
-		DPMSSetTimeouts(dpy, cfg_dpms_standby,
-						cfg_dpms_standby, cfg_dpms_off);
-
-		DPMSInfo(dpy, &dpms_level, &dpms_state);
-		if (!dpms_state)
-			DPMSEnable(dpy);
+	  DPMSGetTimeouts(dpy, &dpms_standby, &dpms_suspend, &dpms_off);
+	  DPMSSetTimeouts(dpy, cfg_dpms_standby,
+			  cfg_dpms_standby, cfg_dpms_off);
+	  DPMSInfo(dpy, &dpms_level, &dpms_state);
+	  if (!dpms_state)
+	    DPMSEnable(dpy);
 	}
 
 	// Get password timeout
@@ -251,7 +248,7 @@ int main(int argc, char **argv) {
 
 	if(cfg->getOption("tty_lock") == "1") {
 		if ((ioctl(term, VT_UNLOCKSWITCH)) == -1) {
-			perror("error unlocking console");
+			perror("unable to unlock console");
 		}
 	}
 	close(term);
@@ -272,14 +269,14 @@ void HideCursor()
 		black.green = 0;
 		black.blue = 0;
 		cursor = XCreatePixmapCursor(dpy, cursorpixmap, cursorpixmap,
-									 &black, &black, 0, 0);
+					     &black, &black, 0, 0);
 		XFreePixmap(dpy, cursorpixmap);
 		XDefineCursor(dpy, win, cursor);
 	}
 }
 
 static int ConvCallback(int num_msgs, const struct pam_message **msg,
-						struct pam_response **resp, void *appdata_ptr)
+			struct pam_response **resp, void *appdata_ptr)
 {
 	loginPanel->EventHandler(Panel::Get_Passwd);
 
@@ -296,8 +293,8 @@ static int ConvCallback(int num_msgs, const struct pam_message **msg,
 		// return code is currently not used but should be set to zero
 		resp[i]->resp_retcode = 0;
 		if ((resp[i]->resp = strdup(loginPanel->GetPasswd().c_str())) == NULL) {
-			free(*resp);
-			return PAM_BUF_ERR;
+		  free(*resp);
+		  return PAM_BUF_ERR;
 		}
 	}
 
@@ -311,7 +308,7 @@ bool AuthenticateUser()
 
 string findValidRandomTheme(const string& set)
 {
-	// extract random theme from theme set; return empty string on error
+  // extract random theme from theme set; return empty string on error
 	string name = set;
 	struct stat buf;
 
@@ -326,14 +323,13 @@ string findValidRandomTheme(const string& set)
 	Cfg::split(themes, name, ',');
 	do {
 		int sel = Util::random() % themes.size();
-
 		name = Cfg::Trim(themes[sel]);
 		themefile = string(THEMESDIR) +"/" + name + THEMESFILE;
 		if (stat(themefile.c_str(), &buf) != 0) {
-			themes.erase(find(themes.begin(), themes.end(), name));
-			cerr << APPNAME << ": Invalid theme in config: "
-				 << name << endl;
-			name = "";
+		  themes.erase(find(themes.begin(), themes.end(), name));
+		  cerr << APPNAME << ": Invalid theme in config: "
+		       << name << endl;
+		  name = "";
 		}
 	} while (name == "" && themes.size());
 	return name;
@@ -343,14 +339,14 @@ void HandleSignal(int sig)
 {
 	// Get DPMS stuff back to normal
 	if (using_dpms) {
-		DPMSSetTimeouts(dpy, dpms_standby, dpms_suspend, dpms_off);
-		// turn off DPMS if it was off when we entered
-		if (!dpms_state)
-			DPMSDisable(dpy);
+	  DPMSSetTimeouts(dpy, dpms_standby, dpms_suspend, dpms_off);
+	  // turn off DPMS if it was off when we entered
+	  if (!dpms_state)
+	    DPMSDisable(dpy);
 	}
 
 	if ((ioctl(term, VT_UNLOCKSWITCH)) == -1) {
-		perror("error unlocking console");
+	  perror("error unlocking console");
 	}
 	close(term);
 
@@ -362,8 +358,8 @@ void HandleSignal(int sig)
 
 void* RaiseWindow(void *data) {
 	while(1) {
-		XRaiseWindow(dpy, win);
-		sleep(1);
+	  XRaiseWindow(dpy, win);
+	  sleep(1);
 	}
 
 	return (void *)0;

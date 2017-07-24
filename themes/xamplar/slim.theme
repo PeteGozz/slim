@@ -2,7 +2,7 @@
 # slim.theme  xamplar
 # 
 #      stretchable centerable and almost tilable theme
-#      with transparency and clean simple panel.
+#      with clean simple panel.
 #      
 #      Intended for use as a template, rather than as is.
 #      Peter Gossner 2017 placed under the GPL3 (or later) 
@@ -117,7 +117,7 @@ session_shadow_yoffset 2
 # Hints and Intro Messages
 #  On the root screen
 #
-hints_msg            Press [F1] for more Xsessions
+hints_msg            [F1] for more Xsessions. reboot .  halt .  or exit to terminal
 # % or int tested OK 
 hints_x              50%
 hints_y              90%
@@ -139,6 +139,6 @@ passwd_feedback_msg       Authentication has Failed
 passwd_feedback_capslock  CaPsLocK is ON
 show_username              1
 show_welcome_msg           1
-tty_lock                   1
+tty_lock                   0
 bell                       0
 
