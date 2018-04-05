@@ -18,13 +18,15 @@ ELSE (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 2.5)
   pkg_search_module(FONTCONFIG REQUIRED fontconfig)
 ENDIF (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 2.5)
 
-#INCLUDE(UsePkgConfig)
+# this does not break for cmake version 3.10.2
+INCLUDE(UsePkgConfig)
+INCLUDE(FindPkgConfig)
 
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
 #PKGCONFIG(fontconfig _fontconfigIncDir _fontconfigLinkDir _fontconfigLinkFlags _fontconfigCflags)
 
-#SET(FONTCONFIG_LIBS ${_fontconfigCflags})
+SET(FONTCONFIG_LIBS ${_fontconfigCflags})
 
 IF(BUILD_OSX_BUNDLE)
   FIND_PATH(FONTCONFIG_INCLUDE_DIR
