@@ -5,21 +5,27 @@
 Prerequisites:
 --------------
 
-   - cmake
-   - X.org or XFree86
+   - cmake (version 3.10.2)
+   - A C++ Compiler (g++)
+   - PkgConfig (pkg-config (0.29-4)) 
+   - fontconfig (2.11.0-6.7)
+   - libfreetype (libfreetype6-dev)
+   - libxft-dev (2.3.2-1+b2)
    - libxmu
-   - libpng
-   - libjpeg
-
+   - libpng (libpng-dev) 
+   - zlib ("1.2.8")
+   - libjpeg (libjpeg9-dev)
+   - X.org or XFree86
+   
    Optionally may also require:
 
-   - libpam0g  (required really)
+   - libpam0g  (required really) 
    - libck-connector0
    - libdbus-1-3
 
 
-    (These should be auto-detected cached
-     and reported at _initial_ cmake time.)
+    (These should be auto-detected cached  and reported 
+	at _initial_ cmake time.)
 
 External Applications
 ----------------------
