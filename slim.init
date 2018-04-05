@@ -57,7 +57,7 @@ case $1 in
   ;;
 
   status)
-      status_of_proc /usr/bin/$NAME $NAME
+      status_of_proc $DAEMON $NAME
       pgrep $NAME 
   ;;
 
