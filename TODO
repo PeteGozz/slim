@@ -1,3 +1,9 @@
+generic (petegozz)
+-------
+- trace auth issues with xorg
+- check pam process path
+- short out any systemd / *kit bloats
+
 1.2.2
 -----
 - drawing problem on screens <= 1024x768 (implemented)
