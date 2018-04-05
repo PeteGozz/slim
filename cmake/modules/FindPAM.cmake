@@ -1,4 +1,4 @@
-# - Try to find the PAM libraries
+# - Try - to find the PAM libraries
 # Once done this will define
 #
 #  PAM_FOUND - system has pam
