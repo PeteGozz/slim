@@ -28,9 +28,9 @@ set(LIBDIR "/lib")
 set(MANDIR "${CMAKE_INSTALL_PREFIX}/share/man")
 
 set(SLIM_DEFINITIONS)
-if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD" OR
-		${CMAKE_SYSTEM_NAME} MATCHES "NetBSD" OR
-		${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD"
+if(${CMAKE_SYSTEM_NAME} MATCHES "NetBSD" OR
+		${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD" OR
+		${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD"
 		)
 	set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DNEEDS_BASENAME")
 else()
@@ -68,10 +68,14 @@ set(common_srcs
     panel.cpp
     util.cpp
 )
+### working on pam here 
 if(USE_PAM)
-	set(common_srcs ${common_srcs} PAM.cpp)
-    # Only build slimlock _if_ we are using PAM.
-    set(BUILD_SLIMLOCK 1)
+  set(common_srcs
+    ${common_srcs}
+    PAM.cpp
+    )
+  # Only build slimlock _if_ we are using PAM.
+  set(BUILD_SLIMLOCK 1)
 endif(USE_PAM)
 
 # Build common library
@@ -126,19 +130,19 @@ if(USE_PAM)
 		message("\tPAM Not Found")
 	endif(PAM_FOUND)
 else(USE_PAM)
-	message("\tPAM disabled")
+	message("\tWarning PAM disabled")
 endif(USE_PAM)
 
 # ConsoleKit
 if(USE_CONSOLEKIT)
 	find_package(CkConnector)
-	message("\tConsoleKit Enabled")
+	message("\tNote ConsoleKit Enabled")
 	if(CKCONNECTOR_FOUND)
 		message("\tConsoleKit Found")
 		# DBus check
 		find_package(DBus REQUIRED)
 		if(DBUS_FOUND)
-			message("\tDBus Found")
+			message("\tDNote Bus Found")
 			target_link_libraries(${PROJECT_NAME} ${DBUS_LIBRARIES})
 			include_directories(${DBUS_ARCH_INCLUDE_DIR})
 			include_directories(${DBUS_INCLUDE_DIR})
@@ -149,11 +153,11 @@ if(USE_CONSOLEKIT)
 			message("\tDBus Not Found")
 		endif(DBUS_FOUND)
 	else(CKCONNECTOR_FOUND)
-		message("\tConsoleKit Not Found")
-		message("\tConsoleKit disabled")
+		message("\tOK ConsoleKit Not Found")
+		message("\tOK ConsoleKit disabled")
 	endif(CKCONNECTOR_FOUND)
 else(USE_CONSOLEKIT)
-	message("\tConsoleKit disabled")
+	message("\tOK ConsoleKit disabled")
 endif(USE_CONSOLEKIT)
 
 # system librarys
@@ -230,7 +234,6 @@ if (BUILD_SHARED_LIBS)
 	set_target_properties(libslim PROPERTIES
 		OUTPUT_NAME slim
 		SOVERSION ${SLIM_VERSION})
-
 	install(TARGETS libslim
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib
@@ -242,7 +245,7 @@ install(FILES slimlock.1 DESTINATION ${MANDIR}/man1/)
 # configure
 install(FILES slim.conf DESTINATION ${SYSCONFDIR})
 # systemd service file: mostly harmless
-# debian style /etc/init.d/
+# debian sysV style /etc/init.d/
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
   # deliberately keeping the init suffix so as
