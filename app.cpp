@@ -35,458 +35,460 @@ using namespace std;
 #ifdef USE_PAM
 #include <string>
 
-int conv(int num_msg, const struct pam_message **msg,
-		 struct pam_response **resp, void *appdata_ptr){
-	*resp = (struct pam_response *) calloc(num_msg, sizeof(struct pam_response));
-	Panel* panel = *static_cast<Panel**>(appdata_ptr);
-	int result = PAM_SUCCESS;
-	for (int i=0; i<num_msg; i++){
-		(*resp)[i].resp=0;
-		(*resp)[i].resp_retcode=0;
-		switch(msg[i]->msg_style){
-			case PAM_PROMPT_ECHO_ON:
-				/* We assume PAM is asking for the username */
-				panel->EventHandler(Panel::Get_Name);
-				switch(panel->getAction()){
-					case Panel::Suspend:
-					case Panel::Halt:
-					case Panel::Reboot:
-						(*resp)[i].resp=strdup("root");
-						break;
-
-					case Panel::Console:
-					case Panel::Exit:
-					case Panel::Login:
-						(*resp)[i].resp=strdup(panel->GetName().c_str());
-						break;
-					default:
-						break;
-				}
-				break;
-
-			case PAM_PROMPT_ECHO_OFF:
-				/* We assume PAM is asking for the password */
-				switch(panel->getAction()){
-					case Panel::Console:
-					case Panel::Exit:
-						/* We should leave now! */
-						result=PAM_CONV_ERR;
-						break;
-
-					default:
-						panel->EventHandler(Panel::Get_Passwd);
-						(*resp)[i].resp=strdup(panel->GetPasswd().c_str());
-						break;
-				}
-				break;
-
-			case PAM_ERROR_MSG:
-			case PAM_TEXT_INFO:
-				/* We simply write these to the log
-				   TODO: Maybe we should simply ignore them */
-				logStream << APPNAME << ": " << msg[i]->msg << endl;
-				break;
-		}
-		if (result!=PAM_SUCCESS) break;
-	}
-	if (result!=PAM_SUCCESS){
-		for (int i=0; i<num_msg; i++){
-			if ((*resp)[i].resp==0) continue;
-			free((*resp)[i].resp);
-			(*resp)[i].resp=0;
-		};
-		free(*resp);
-		*resp=0;
-	};
-	return result;
+int conv(int num_msg,
+	 const struct pam_message **msg,
+	 struct pam_response **resp,
+	 void *appdata_ptr){
+  *resp = (struct pam_response *) calloc(num_msg, sizeof(struct pam_response));
+  Panel* panel = *static_cast<Panel**>(appdata_ptr);
+  int result = PAM_SUCCESS;
+  for (int i=0; i<num_msg; i++){
+    (*resp)[i].resp=0;
+    (*resp)[i].resp_retcode=0;
+    switch(msg[i]->msg_style){
+    case PAM_PROMPT_ECHO_ON:
+      /* We assume PAM is asking for the username */
+      panel->EventHandler(Panel::Get_Name);
+      switch(panel->getAction()){
+      case Panel::Suspend:
+      case Panel::Halt:
+      case Panel::Reboot:
+	(*resp)[i].resp=strdup("root");
+	break;
+	
+      case Panel::Console:
+      case Panel::Exit:
+      case Panel::Login:
+	(*resp)[i].resp=strdup(panel->GetName().c_str());
+	break;
+      default:
+	break;
+      }
+      break;
+      
+    case PAM_PROMPT_ECHO_OFF:
+      /* We assume PAM is asking for the password */
+      switch(panel->getAction()){
+      case Panel::Console:
+      case Panel::Exit:
+	/* We should leave now! */
+	result=PAM_CONV_ERR;
+	break;
+	
+      default:
+	panel->EventHandler(Panel::Get_Passwd);
+	(*resp)[i].resp=strdup(panel->GetPasswd().c_str());
+	break;
+      }
+      break;
+      
+    case PAM_ERROR_MSG:
+    case PAM_TEXT_INFO:
+      /* We simply write these to the log
+	 TODO: Maybe we should simply ignore them */
+      logStream << APPNAME << ": " << msg[i]->msg << endl;
+      break;
+    }
+    if (result!=PAM_SUCCESS) break;
+  }
+  if (result!=PAM_SUCCESS){
+    for (int i=0; i<num_msg; i++){
+      if ((*resp)[i].resp==0) continue;
+      free((*resp)[i].resp);
+      (*resp)[i].resp=0;
+    };
+    free(*resp);
+    *resp=0;
+  };
+  return result;
 }
 #endif
 
 extern App* LoginApp;
 
 int xioerror(Display *disp) {
-	LoginApp->RestartServer();
-	return 0;
+  LoginApp->RestartServer();
+  return 0;
 }
 
 void CatchSignal(int sig) {
-	logStream << APPNAME << ": unexpected signal " << sig << endl;
-
-	if (LoginApp->isServerStarted())
-		LoginApp->StopServer();
-
-	LoginApp->RemoveLock();
-	exit(ERR_EXIT);
+  logStream << APPNAME << ": unexpected signal " << sig << endl;
+  
+  if (LoginApp->isServerStarted())
+    LoginApp->StopServer();
+  
+  LoginApp->RemoveLock();
+  exit(ERR_EXIT);
 }
 
 void User1Signal(int sig) {
-	signal(sig, User1Signal);
+  signal(sig, User1Signal);
 }
 
 #ifdef USE_PAM
 App::App(int argc, char** argv)
   : pam(conv, static_cast<void*>(&LoginPanel)),
 #else
-App::App(int argc, char** argv)
+    App::App(int argc, char** argv)
   :
 #endif
-	mcookiesize(32)		/* Must be divisible by 4 */
+    mcookiesize(32)		/* Must be divisible by 4 */
 {
-	int tmp;
-	ServerPID = -1;
-	testing = false;
-	serverStarted = false;
-	mcookie = string(App::mcookiesize, 'a');
-	daemonmode = false;
-	force_nodaemon = false;
-	firstlogin = true;
-	Dpy = NULL;
-
-	/* Parse command line
-	   Note: we force a option for nodaemon switch to handle "-nodaemon" */
-	while((tmp = getopt(argc, argv, "vhp:n:d?")) != EOF) {
-		switch (tmp) {
-		case 'p':	/* Test theme */
-			testtheme = optarg;
-			testing = true;
-			if (testtheme == NULL) {
-				logStream << "The -p option requires an argument" << endl;
-				exit(ERR_EXIT);
-			}
-			break;
-		case 'd':	/* Daemon mode */
-			daemonmode = true;
-			break;
-		case 'n':	/*not  Daemon mode */
-			daemonmode = false;
-			force_nodaemon = true;
-			break;
-		case 'v':	/* Version */
-			std::cout << APPNAME << " version " << VERSION << endl;
-			exit(OK_EXIT);
-			break;
-		case '?':	/* Illegal */
-			logStream << endl;
-		case 'h':   /* Help */
-			logStream << "usage:  " << APPNAME << " [option ...]" << endl
-			<< "options:" << endl
-			<< "	-d: daemon mode" << endl
-			<< "	-nodaemon: no-daemon mode" << endl
-			<< "	-v: show version" << endl
-			<< "	-p /path/to/theme/dir: preview theme" << endl;
-			exit(OK_EXIT);
-			break;
-		}
-	}
+  int tmp;
+  ServerPID = -1;
+  testing = false;
+  serverStarted = false;
+  mcookie = string(App::mcookiesize, 'a');
+  daemonmode = false;
+  force_nodaemon = false;
+  firstlogin = true;
+  Dpy = NULL;
+  
+  /* Parse command line
+     Note: we force a option for nodaemon switch to handle "-nodaemon" */
+  while((tmp = getopt(argc, argv, "vhp:n:d?")) != EOF) {
+    switch (tmp) {
+    case 'p':	/* Test theme */
+      testtheme = optarg;
+      testing = true;
+      if (testtheme == NULL) {
+	logStream << "The -p option requires an argument" << endl;
+	exit(ERR_EXIT);
+      }
+      break;
+    case 'd':	/* Daemon mode */
+      daemonmode = true;
+      break;
+    case 'n':	/*not  Daemon mode */
+      daemonmode = false;
+      force_nodaemon = true;
+      break;
+    case 'v':	/* Version */
+      std::cout << APPNAME << " version " << VERSION << endl;
+      exit(OK_EXIT);
+      break;
+    case '?':	/* Illegal */
+      logStream << endl;
+    case 'h':   /* Help */
+      logStream << "usage:  " << APPNAME << " [option ...]" << endl
+		<< "options:" << endl
+		<< "	-d: daemon mode" << endl
+		<< "	-nodaemon: no-daemon mode" << endl
+		<< "	-v: show version" << endl
+		<< "	-p /path/to/theme/dir: preview theme" << endl;
+      exit(OK_EXIT);
+      break;
+    }
+  }
 #ifndef XNEST_DEBUG
-	if (getuid() != 0 && !testing) {
-		logStream << APPNAME << ": only root can run this program" << endl;
-		exit(ERR_EXIT);
-	}
+  if (getuid() != 0 && !testing) {
+    logStream << APPNAME << ": only root can run this program" << endl;
+    exit(ERR_EXIT);
+  }
 #endif /* XNEST_DEBUG */
-
+  
 }
 
 void App::Run() {
-	DisplayName = DISPLAY;
+  DisplayName = DISPLAY;
 
 #ifdef XNEST_DEBUG
-	char* p = getenv("DISPLAY");
-	if (p && p[0]) {
-		DisplayName = p;
-		cout << "Using display name " << DisplayName << endl;
-	}
+  char* p = getenv("DISPLAY");
+  if (p && p[0]) {
+    DisplayName = p;
+    cout << "Using display name " << DisplayName << endl;
+  }
 #endif
 
-	/* Read configuration and theme */
-	cfg = new Cfg;
-	cfg->readConf(CFGFILE);
-	string themebase = "";
-	string themefile = "";
-	string themedir = "";
-	themeName = "";
-	if (testing) {
-		themeName = testtheme;
-	} else {
-		themebase = string(THEMESDIR) + "/";
-		themeName = cfg->getOption("current_theme");
-		string::size_type pos;
-		if ((pos = themeName.find(",")) != string::npos) {
-			/* input is a set */
-			themeName = findValidRandomTheme(themeName);
-			if (themeName == "") {
-				themeName = "default";
-			}
-		}
-	}
-
+  /* Read configuration and theme */
+  cfg = new Cfg;
+  cfg->readConf(CFGFILE);
+  string themebase = "";
+  string themefile = "";
+  string themedir = "";
+  themeName = "";
+  if (testing) {
+    themeName = testtheme;
+  } else {
+    themebase = string(THEMESDIR) + "/";
+    themeName = cfg->getOption("current_theme");
+    string::size_type pos;
+    if ((pos = themeName.find(",")) != string::npos) {
+      /* input is a set */
+      themeName = findValidRandomTheme(themeName);
+      if (themeName == "") {
+	themeName = "default";
+      }
+    }
+  }
+  
 #ifdef USE_PAM
-	try{
-		pam.start("slim");
-		pam.set_item(PAM::Authenticator::TTY, DisplayName);
-		pam.set_item(PAM::Authenticator::Requestor, "root");
-	}
-	catch(PAM::Exception& e){
-		logStream << APPNAME << ": " << e << endl;
-		exit(ERR_EXIT);
-	};
+  try{
+    pam.start("slim");
+    pam.set_item(PAM::Authenticator::TTY, DisplayName);
+    pam.set_item(PAM::Authenticator::Requestor, "root");
+  }
+  catch(PAM::Exception& e){
+    logStream << APPNAME << ": " << e << endl;
+    exit(ERR_EXIT);
+  };
 #endif
-
-	bool loaded = false;
-	while (!loaded) {
-		themedir =  themebase + themeName;
-		themefile = themedir + THEMESFILE;
-		if (!cfg->readConf(themefile)) {
-			if (themeName == "default") {
-				logStream << APPNAME << ": Failed to open default theme file "
-					 << themefile << endl;
-				exit(ERR_EXIT);
-			} else {
-				logStream << APPNAME << ": Invalid theme in config: "
+  
+  bool loaded = false;
+  while (!loaded) {
+    themedir =  themebase + themeName;
+    themefile = themedir + THEMESFILE;
+    if (!cfg->readConf(themefile)) {
+      if (themeName == "default") {
+	logStream << APPNAME << ": Failed to open default theme file "
+		  << themefile << endl;
+	exit(ERR_EXIT);
+      } else {
+	logStream << APPNAME << ": Invalid theme in config: "
 					 << themeName << endl;
-				themeName = "default";
-			}
-		} else {
-			loaded = true;
-		}
-	}
-
-	if (!testing) {
-		/* Create lock file */
-		LoginApp->GetLock();
-
-		/* Start x-server */
-		setenv("DISPLAY", DisplayName, 1);
-		signal(SIGQUIT, CatchSignal);
-		signal(SIGTERM, CatchSignal);
-		signal(SIGKILL, CatchSignal);
-		signal(SIGINT, CatchSignal);
-		signal(SIGHUP, CatchSignal);
-		signal(SIGPIPE, CatchSignal);
-		signal(SIGUSR1, User1Signal);
-
+	themeName = "default";
+      }
+    } else {
+      loaded = true;
+    }
+  }
+  
+  if (!testing) {
+    /* Create lock file */
+    LoginApp->GetLock();
+    
+    /* Start x-server */
+    setenv("DISPLAY", DisplayName, 1);
+    signal(SIGQUIT, CatchSignal);
+    signal(SIGTERM, CatchSignal);
+    signal(SIGKILL, CatchSignal);
+    signal(SIGINT, CatchSignal);
+    signal(SIGHUP, CatchSignal);
+    signal(SIGPIPE, CatchSignal);
+    signal(SIGUSR1, User1Signal);
+    
 #ifndef XNEST_DEBUG
-		if (!force_nodaemon && cfg->getOption("daemon") == "yes") {
-			daemonmode = true;
-		}
-
-		/* Daemonize */
-		if (daemonmode) {
-			if (daemon(0, 0) == -1) {
-				logStream << APPNAME << ": " << strerror(errno) << endl;
-				exit(ERR_EXIT);
-			}
-		}
-
-		OpenLog();
-
-		if (daemonmode)
-			UpdatePid();
-
-		CreateServerAuth();
-		StartServer();
+    if (!force_nodaemon && cfg->getOption("daemon") == "yes") {
+      daemonmode = true;
+    }
+    
+    /* Daemonize */
+    if (daemonmode) {
+      if (daemon(0, 0) == -1) {
+	logStream << APPNAME << ": " << strerror(errno) << endl;
+	exit(ERR_EXIT);
+      }
+    }
+    
+    OpenLog();
+    
+    if (daemonmode)
+      UpdatePid();
+    
+    CreateServerAuth();
+    StartServer();
 #endif
-
-	}
-
-	/* Open display */
-	if((Dpy = XOpenDisplay(DisplayName)) == 0) {
-		logStream << APPNAME << ": could not open display '"
-			 << DisplayName << "'" << endl;
-		if (!testing) StopServer();
-		exit(ERR_EXIT);
-	}
-
-	/* Get screen and root window */
-	Scr = DefaultScreen(Dpy);
-	Root = RootWindow(Dpy, Scr);
-
-	// Intern _XROOTPMAP_ID property
-	BackgroundPixmapId = XInternAtom(Dpy, "_XROOTPMAP_ID", False);
-
-	/* for tests we use a standard window */
-	if (testing) {
-		Window RealRoot = RootWindow(Dpy, Scr);
-		Root = XCreateSimpleWindow(Dpy, RealRoot, 0, 0, 1280, 1024, 0, 0, 0);
-		XMapWindow(Dpy, Root);
-		XFlush(Dpy);
-	} else {
-		blankScreen();
-	}
-
-	HideCursor();
-
-	/* Create panel */
-	LoginPanel = new Panel(Dpy, Scr, Root, cfg, themedir, Panel::Mode_DM);
-	bool firstloop = true; /* 1st time panel is shown (for automatic username) */
-	bool focuspass = cfg->getOption("focus_password")=="yes";
-	bool autologin = cfg->getOption("auto_login")=="yes";
-
-	if (firstlogin && cfg->getOption("default_user") != "") {
-		LoginPanel->SetName(cfg->getOption("default_user") );
+    
+  }
+  
+  /* Open display */
+  if((Dpy = XOpenDisplay(DisplayName)) == 0) {
+    logStream << APPNAME << ": could not open display '"
+	      << DisplayName << "'" << endl;
+    if (!testing) StopServer();
+    exit(ERR_EXIT);
+  }
+  
+  /* Get screen and root window */
+  Scr = DefaultScreen(Dpy);
+  Root = RootWindow(Dpy, Scr);
+  
+  // Intern _XROOTPMAP_ID property
+  BackgroundPixmapId = XInternAtom(Dpy, "_XROOTPMAP_ID", False);
+  
+  /* for tests we use a standard window */
+  if (testing) {
+    Window RealRoot = RootWindow(Dpy, Scr);
+    Root = XCreateSimpleWindow(Dpy, RealRoot, 0, 0, 1280, 1024, 0, 0, 0);
+    XMapWindow(Dpy, Root);
+    XFlush(Dpy);
+  } else {
+    blankScreen();
+  }
+  
+  HideCursor();
+  
+  /* Create panel */
+  LoginPanel = new Panel(Dpy, Scr, Root, cfg, themedir, Panel::Mode_DM);
+  bool firstloop = true; /* 1st time panel is shown (for automatic username) */
+  bool focuspass = cfg->getOption("focus_password")=="yes";
+  bool autologin = cfg->getOption("auto_login")=="yes";
+  
+  if (firstlogin && cfg->getOption("default_user") != "") {
+    LoginPanel->SetName(cfg->getOption("default_user") );
 #ifdef USE_PAM
-	pam.set_item(PAM::Authenticator::User, cfg->getOption("default_user").c_str());
+    pam.set_item(PAM::Authenticator::User, cfg->getOption("default_user").c_str());
 #endif
-		firstlogin = false;
-		if (autologin) {
-			Login();
-		}
-	}
-
-	/* Set NumLock */
-	string numlock = cfg->getOption("numlock");
-	if (numlock == "on") {
-		NumLock::setOn(Dpy);
-	} else if (numlock == "off") {
-		NumLock::setOff(Dpy);
-	}
-
-	/* Start looping */
-	int panelclosed = 1;
-	Panel::ActionType Action;
-
-	while(1) {
-		if(panelclosed) {
-			/* Init root */
-			setBackground(themedir);
-
-			/* Close all clients */
-			if (!testing) {
-				KillAllClients(False);
-				KillAllClients(True);
-			}
-
-			/* Show panel */
-			LoginPanel->OpenPanel();
-		}
-
-		LoginPanel->Reset();
-
-		if (firstloop && cfg->getOption("default_user") != "") {
-			LoginPanel->SetName(cfg->getOption("default_user") );
-		}
-
-		if (!AuthenticateUser(focuspass && firstloop)){
-			panelclosed = 0;
-			firstloop = false;
-			LoginPanel->ClearPanel();
-			XBell(Dpy, 100);
-			continue;
-		}
-
-		firstloop = false;
-
-		Action = LoginPanel->getAction();
-		/* for themes test we just quit */
-		if (testing) {
-			Action = Panel::Exit;
-		}
-		panelclosed = 1;
-		LoginPanel->ClosePanel();
-
-		switch(Action) {
-			case Panel::Login:
-				Login();
-				break;
-			case Panel::Console:
-				Console();
-				break;
-			case Panel::Reboot:
-				Reboot();
-				break;
-			case Panel::Halt:
-				Halt();
-				break;
-			case Panel::Suspend:
-				Suspend();
-				break;
-			case Panel::Exit:
-				Exit();
-				break;
-			default:
-				break;
-		}
-	}
+    firstlogin = false;
+    if (autologin) {
+      Login();
+    }
+  }
+  
+  /* Set NumLock */
+  string numlock = cfg->getOption("numlock");
+  if (numlock == "on") {
+    NumLock::setOn(Dpy);
+  } else if (numlock == "off") {
+    NumLock::setOff(Dpy);
+  }
+  
+  /* Start looping */
+  int panelclosed = 1;
+  Panel::ActionType Action;
+  
+  while(1) {
+    if(panelclosed) {
+      /* Init root */
+      setBackground(themedir);
+      
+      /* Close all clients */
+      if (!testing) {
+	KillAllClients(False);
+	KillAllClients(True);
+      }
+      
+      /* Show panel */
+      LoginPanel->OpenPanel();
+    }
+    
+    LoginPanel->Reset();
+    
+    if (firstloop && cfg->getOption("default_user") != "") {
+      LoginPanel->SetName(cfg->getOption("default_user") );
+    }
+    
+    if (!AuthenticateUser(focuspass && firstloop)){
+      panelclosed = 0;
+      firstloop = false;
+      LoginPanel->ClearPanel();
+      XBell(Dpy, 100);
+      continue;
+    }
+    
+    firstloop = false;
+    
+    Action = LoginPanel->getAction();
+    /* for themes test we just quit */
+    if (testing) {
+      Action = Panel::Exit;
+    }
+    panelclosed = 1;
+    LoginPanel->ClosePanel();
+    
+    switch(Action) {
+    case Panel::Login:
+      Login();
+      break;
+    case Panel::Console:
+      Console();
+      break;
+    case Panel::Reboot:
+      Reboot();
+      break;
+    case Panel::Halt:
+      Halt();
+      break;
+    case Panel::Suspend:
+      Suspend();
+      break;
+    case Panel::Exit:
+      Exit();
+      break;
+    default:
+      break;
+    }
+  }
 }
 
 #ifdef USE_PAM
 bool App::AuthenticateUser(bool focuspass){
-	/* Reset the username */
-	try{
-		if (!focuspass)
-			pam.set_item(PAM::Authenticator::User, 0);
-		pam.authenticate();
-	}
-	catch(PAM::Auth_Exception& e){
-		switch(LoginPanel->getAction()){
-			case Panel::Exit:
-			case Panel::Console:
-				return true; /* <--- This is simply fake! */
-			default:
-				break;
-		};
-		logStream << APPNAME << ": " << e << endl;
-		return false;
-	}
-	catch(PAM::Exception& e){
-		logStream << APPNAME << ": " << e << endl;
-		exit(ERR_EXIT);
-	};
-	return true;
+  /* Reset the username */
+  try{
+    if (!focuspass)
+      pam.set_item(PAM::Authenticator::User, 0);
+    pam.authenticate();
+  }
+  catch(PAM::Auth_Exception& e){
+    switch(LoginPanel->getAction()){
+    case Panel::Exit:
+    case Panel::Console:
+      return true; /* <--- This is simply fake! */
+    default:
+      break;
+    };
+    logStream << APPNAME << ": " << e << endl;
+    return false;
+  }
+  catch(PAM::Exception& e){
+    logStream << APPNAME << ": " << e << endl;
+    exit(ERR_EXIT);
+  };
+  return true;
 }
 #else
 bool App::AuthenticateUser(bool focuspass){
-	if (!focuspass){
-		LoginPanel->EventHandler(Panel::Get_Name);
-		switch(LoginPanel->getAction()){
-			case Panel::Exit:
-			case Panel::Console:
-				logStream << APPNAME << ": Got a special command (" << LoginPanel->GetName() << ")" << endl;
-				return true; /* <--- This is simply fake! */
-			default:
-				break;
-		}
-	}
-	LoginPanel->EventHandler(Panel::Get_Passwd);
-
-	char *encrypted, *correct;
-	struct passwd *pw;
-
-	switch(LoginPanel->getAction()){
-		case Panel::Suspend:
-		case Panel::Halt:
-		case Panel::Reboot:
-			pw = getpwnam("root");
-			break;
-		case Panel::Console:
-		case Panel::Exit:
-		case Panel::Login:
-			pw = getpwnam(LoginPanel->GetName().c_str());
-			break;
-	}
-	endpwent();
-	if(pw == 0)
-		return false;
-
+  if (!focuspass){
+    LoginPanel->EventHandler(Panel::Get_Name);
+    switch(LoginPanel->getAction()){
+    case Panel::Exit:
+    case Panel::Console:
+      logStream << APPNAME << ": Got a special command (" << LoginPanel->GetName() << ")" << endl;
+      return true; /* <--- This is simply fake! */
+    default:
+      break;
+    }
+  }
+  LoginPanel->EventHandler(Panel::Get_Passwd);
+  
+  char *encrypted, *correct;
+  struct passwd *pw;
+  
+  switch(LoginPanel->getAction()){
+  case Panel::Suspend:
+  case Panel::Halt:
+  case Panel::Reboot:
+    pw = getpwnam("root");
+    break;
+  case Panel::Console:
+  case Panel::Exit:
+  case Panel::Login:
+    pw = getpwnam(LoginPanel->GetName().c_str());
+    break;
+  }
+  endpwent();
+  if(pw == 0)
+    return false;
+  
 #ifdef HAVE_SHADOW
-	struct spwd *sp = getspnam(pw->pw_name);
-	endspent();
-	if(sp)
-		correct = sp->sp_pwdp;
-	else
+  struct spwd *sp = getspnam(pw->pw_name);
+  endspent();
+  if(sp)
+    correct = sp->sp_pwdp;
+  else
 #endif		/* HAVE_SHADOW */
-		correct = pw->pw_passwd;
-
-	if(correct == 0 || correct[0] == '\0')
-		return true;
-
-	encrypted = crypt(LoginPanel->GetPasswd().c_str(), correct);
-	return ((encrypted && strcmp(encrypted, correct) == 0) ? true : false);
+    correct = pw->pw_passwd;
+  
+  if(correct == 0 || correct[0] == '\0')
+    return true;
+  
+  encrypted = crypt(LoginPanel->GetPasswd().c_str(), correct);
+  return ((encrypted && strcmp(encrypted, correct) == 0) ? true : false);
 }
 #endif
 
 int App::GetServerPID() {
-	return ServerPID;
+  return ServerPID;
 }
 
 /* Hide the cursor */
@@ -512,30 +514,30 @@ void App::Login() {
 
 #ifdef USE_PAM
 	try{
-		pam.open_session();
-		pw = getpwnam(static_cast<const char*>(pam.get_item(PAM::Authenticator::User)));
+	  pam.open_session();
+	  pw = getpwnam(static_cast<const char*>(pam.get_item(PAM::Authenticator::User)));
 	}
 	catch(PAM::Cred_Exception& e){
-		/* Credentials couldn't be established */
-		logStream << APPNAME << ": " << e << endl;
-		return;
+	  /* Credentials couldn't be established */
+	  logStream << APPNAME << ": " << e << endl;
+	  return;
 	}
 	catch(PAM::Exception& e){
-		logStream << APPNAME << ": " << e << endl;
-		exit(ERR_EXIT);
+	  logStream << APPNAME << ": " << e << endl;
+	  exit(ERR_EXIT);
 	};
 #else
 	pw = getpwnam(LoginPanel->GetName().c_str());
 #endif
 	endpwent();
 	if(pw == 0)
-		return;
+	  return;
 	if (pw->pw_shell[0] == '\0') {
-		setusershell();
-		strcpy(pw->pw_shell, getusershell());
-		endusershell();
+	  setusershell();
+	  strcpy(pw->pw_shell, getusershell());
+	  endusershell();
 	}
-
+	
 	/* Setup the environment */
 	char* term = getenv("TERM");
 	string maildir = _PATH_MAILDIR;
@@ -543,35 +545,35 @@ void App::Login() {
 	maildir.append(pw->pw_name);
 	string xauthority = pw->pw_dir;
 	xauthority.append("/.Xauthority");
-
+	
 #ifdef USE_PAM
 	/* Setup the PAM environment */
 	try{
-		if(term) pam.setenv("TERM", term);
-		pam.setenv("HOME", pw->pw_dir);
-		pam.setenv("PWD", pw->pw_dir);
-		pam.setenv("SHELL", pw->pw_shell);
-		pam.setenv("USER", pw->pw_name);
-		pam.setenv("LOGNAME", pw->pw_name);
-		pam.setenv("PATH", cfg->getOption("default_path").c_str());
-		pam.setenv("DISPLAY", DisplayName);
-		pam.setenv("MAIL", maildir.c_str());
-		pam.setenv("XAUTHORITY", xauthority.c_str());
+	  if(term) pam.setenv("TERM", term);
+	  pam.setenv("HOME", pw->pw_dir);
+	  pam.setenv("PWD", pw->pw_dir);
+	  pam.setenv("SHELL", pw->pw_shell);
+	  pam.setenv("USER", pw->pw_name);
+	  pam.setenv("LOGNAME", pw->pw_name);
+	  pam.setenv("PATH", cfg->getOption("default_path").c_str());
+	  pam.setenv("DISPLAY", DisplayName);
+	  pam.setenv("MAIL", maildir.c_str());
+	  pam.setenv("XAUTHORITY", xauthority.c_str());
 	}
 	catch(PAM::Exception& e){
-		logStream << APPNAME << ": " << e << endl;
-		exit(ERR_EXIT);
+	  logStream << APPNAME << ": " << e << endl;
+	  exit(ERR_EXIT);
 	}
 #endif
 
 #ifdef USE_CONSOLEKIT
 	/* Setup the ConsoleKit session */
 	try {
-		ck.open_session(DisplayName, pw->pw_uid);
+	  ck.open_session(DisplayName, pw->pw_uid);
 	}
 	catch(Ck::Exception &e) {
-		logStream << APPNAME << ": " << e << endl;
-		exit(ERR_EXIT);
+	  logStream << APPNAME << ": " << e << endl;
+	  exit(ERR_EXIT);
 	}
 #endif
 
@@ -579,63 +581,64 @@ void App::Login() {
 	pid = fork();
 	if(pid == 0) {
 #ifdef USE_PAM
-		/* Get a copy of the environment and close the child's copy */
-		/* of the PAM-handle. */
-		char** child_env = pam.getenvlist();
+	  /* Get a copy of the environment and close the child's copy */
+	  /* of the PAM-handle. */
+	  char** child_env = pam.getenvlist();
 
 # ifdef USE_CONSOLEKIT
-		char** old_env = child_env;
-
-		/* Grow the copy of the environment for the session cookie */
-		int n;
-		for(n = 0; child_env[n] != NULL ; n++);
-
-		n++;
-
-		child_env = static_cast<char**>(malloc(sizeof(char*)*(n+1)));
-		memcpy(child_env, old_env, sizeof(char*)*n);
-		child_env[n - 1] = StrConcat("XDG_SESSION_COOKIE=", ck.get_xdg_session_cookie());
-		child_env[n] = NULL;
+	  char** old_env = child_env;
+	  
+	  /* Grow the copy of the environment for the session cookie */
+	  int n;
+	  for(n = 0; child_env[n] != NULL ; n++);
+	  
+	  n++;
+	  
+	  child_env = static_cast<char**>(malloc(sizeof(char*)*(n+1)));
+	  memcpy(child_env, old_env, sizeof(char*)*n);
+	  child_env[n - 1] = StrConcat("XDG_SESSION_COOKIE=", ck.get_xdg_session_cookie());
+	  child_env[n] = NULL;
 # endif /* USE_CONSOLEKIT */
 #else
-
+	  
 # ifdef USE_CONSOLEKIT
-		const int Num_Of_Variables = 12; /* Number of env. variables + 1 */
+	  const int Num_Of_Variables = 12; /* Number of env. variables + 1 */
 # else
-		const int Num_Of_Variables = 11; /* Number of env. variables + 1 */
+	  const int Num_Of_Variables = 11; /* Number of env. variables + 1 */
 # endif /* USE_CONSOLEKIT */
-		char** child_env = static_cast<char**>(malloc(sizeof(char*)*Num_Of_Variables));
-		int n = 0;
-		if(term) child_env[n++]=StrConcat("TERM=", term);
-		child_env[n++]=StrConcat("HOME=", pw->pw_dir);
-		child_env[n++]=StrConcat("PWD=", pw->pw_dir);
-		child_env[n++]=StrConcat("SHELL=", pw->pw_shell);
-		child_env[n++]=StrConcat("USER=", pw->pw_name);
-		child_env[n++]=StrConcat("LOGNAME=", pw->pw_name);
-		child_env[n++]=StrConcat("PATH=", cfg->getOption("default_path").c_str());
-		child_env[n++]=StrConcat("DISPLAY=", DisplayName);
-		child_env[n++]=StrConcat("MAIL=", maildir.c_str());
-		child_env[n++]=StrConcat("XAUTHORITY=", xauthority.c_str());
+	  char** child_env = static_cast<char**>(malloc(sizeof(char*)*Num_Of_Variables));
+	  int n = 0;
+	  if(term) child_env[n++]=StrConcat("TERM=", term);
+	  child_env[n++]=StrConcat("HOME=", pw->pw_dir);
+	  child_env[n++]=StrConcat("PWD=", pw->pw_dir);
+	  child_env[n++]=StrConcat("SHELL=", pw->pw_shell);
+	  child_env[n++]=StrConcat("USER=", pw->pw_name);
+	  child_env[n++]=StrConcat("LOGNAME=", pw->pw_name);
+	  child_env[n++]=StrConcat("PATH=", cfg->getOption("default_path").c_str());
+	  child_env[n++]=StrConcat("DISPLAY=", DisplayName);
+	  child_env[n++]=StrConcat("MAIL=", maildir.c_str());
+	  child_env[n++]=StrConcat("XAUTHORITY=", xauthority.c_str());
 # ifdef USE_CONSOLEKIT
-		child_env[n++]=StrConcat("XDG_SESSION_COOKIE=", ck.get_xdg_session_cookie());
+	  child_env[n++]=StrConcat("XDG_SESSION_COOKIE=", ck.get_xdg_session_cookie());
 # endif /* USE_CONSOLEKIT */
-		child_env[n++]=0;
-
+	  child_env[n++]=0;
+	  
 #endif
-
-		/* Login process starts here */
-		SwitchUser Su(pw, cfg, DisplayName, child_env);
-		string session = LoginPanel->getSession();
-		string loginCommand = cfg->getOption("login_cmd");
-		replaceVariables(loginCommand, SESSION_VAR, session);
-		replaceVariables(loginCommand, THEME_VAR, themeName);
-		string sessStart = cfg->getOption("sessionstart_cmd");
-		if (sessStart != "") {
-			replaceVariables(sessStart, USER_VAR, pw->pw_name);
-			system(sessStart.c_str());
-		}
-		Su.Login(loginCommand.c_str(), mcookie.c_str());
-		_exit(OK_EXIT);
+	  
+	  /* Login process starts here */
+	  /* Login process starts here */
+	  SwitchUser Su(pw, cfg, DisplayName, child_env);
+	  string session = LoginPanel->getSession();
+	  string loginCommand = cfg->getOption("login_cmd");
+	  replaceVariables(loginCommand, SESSION_VAR, session);
+	  replaceVariables(loginCommand, THEME_VAR, themeName);
+	  string sessStart = cfg->getOption("sessionstart_cmd");
+	  if (sessStart != "") {
+	    replaceVariables(sessStart, USER_VAR, pw->pw_name);
+	    system(sessStart.c_str());
+	  }
+	  Su.Login(loginCommand.c_str(), mcookie.c_str());
+	  _exit(OK_EXIT);
 	}
 
 #ifndef XNEST_DEBUG
@@ -646,58 +649,58 @@ void App::Login() {
 	pid_t wpid = -1;
 	int status;
 	while (wpid != pid) {
-		wpid = wait(&status);
-		if (wpid == ServerPID)
-			xioerror(Dpy);	/* Server died, simulate IO error */
+	  wpid = wait(&status);
+	  if (wpid == ServerPID)
+	    xioerror(Dpy);	/* Server died, simulate IO error */
 	}
 	if (WIFEXITED(status) && WEXITSTATUS(status)) {
-		LoginPanel->Message("Failed to execute login command");
-		sleep(3);
+	  LoginPanel->Message("Alert: Failed to execute login command");
+	  sleep(3);
 	} else {
-		 string sessStop = cfg->getOption("sessionstop_cmd");
-		 if (sessStop != "") {
-			replaceVariables(sessStop, USER_VAR, pw->pw_name);
-			system(sessStop.c_str());
-		}
+	  string sessStop = cfg->getOption("sessionstop_cmd");
+	  if (sessStop != "") {
+	    replaceVariables(sessStop, USER_VAR, pw->pw_name);
+	    system(sessStop.c_str());
+	  }
 	}
-
+	
 #ifdef USE_CONSOLEKIT
 	try {
-		ck.close_session();
+	  ck.close_session();
 	}
 	catch(Ck::Exception &e) {
-		logStream << APPNAME << ": " << e << endl;
+	  logStream << APPNAME << ": " << e << endl;
 	};
 #endif
-
+	
 #ifdef USE_PAM
 	try{
-		pam.close_session();
+	  pam.close_session();
 	}
 	catch(PAM::Exception& e){
-		logStream << APPNAME << ": " << e << endl;
+	  logStream << APPNAME << ": " << e << endl;
 	};
 #endif
-
-/* Close all clients */
+	
+	/* Close all clients */
 	KillAllClients(False);
 	KillAllClients(True);
-
+	
 	/* Send HUP signal to clientgroup */
 	killpg(pid, SIGHUP);
-
+	
 	/* Send TERM signal to clientgroup, if error send KILL */
 	if(killpg(pid, SIGTERM))
-	killpg(pid, SIGKILL);
-
+	  killpg(pid, SIGKILL);
+	
 	HideCursor();
-
+	
 #ifndef XNEST_DEBUG
 	/* Re-activate log file */
 	OpenLog();
 	RestartServer();
 #endif
-
+	
 }
 
 void App::Reboot() {

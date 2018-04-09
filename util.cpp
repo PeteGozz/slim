@@ -8,7 +8,6 @@
 */
 
 #include <sys/types.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -20,8 +19,11 @@
  * Adds the given cookie to the specified Xauthority file.
  * Returns true on success, false on fault.
  */
-bool Util::add_mcookie(const std::string &mcookie, const char *display,
-	const std::string &xauth_cmd, const std::string &authfile)
+
+bool Util::add_mcookie(const std::string &mcookie,
+		       const char *display,
+		       const std::string &xauth_cmd,
+		       const std::string &authfile)
 {
 	FILE *fp;
 	std::string cmd = xauth_cmd + " -f " + authfile + " -q";
@@ -41,6 +43,7 @@ bool Util::add_mcookie(const std::string &mcookie, const char *display,
  * Interface for random number generator.  Just now it uses ordinary
  * random/srandom routines and serves as a wrapper for them.
  */
+
 void Util::srandom(unsigned long seed)
 {
 	::srandom(seed);
