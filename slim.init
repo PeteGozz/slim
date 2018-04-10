@@ -7,7 +7,7 @@
 # Should-Stop:       xfs $named 
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start slim daemon at boot time
+# Short-Description: Slim Lightweight Graphical Login Manager
 # Description:	     SLiM Display Manager system level init script.
 ### END INIT INFO
 
@@ -20,8 +20,8 @@ DESC="X display and login manager"
 DAEMON=/usr/local/bin/slim
 PIDFILE=/var/run/slim.lock
 
-SSD_START_ARGS="--pidfile $PIDFILE --name $(basename $DAEMON) --startas $DAEMON -- -d"
-SSD_STOP_ARGS="--pidfile $PIDFILE --name $(basename $DAEMON) --retry TERM/5/TERM/5"
+SSD_START_ARGS="--pidfile $PIDFILE --name $NAME --startas $DAEMON -- -d"
+SSD_STOP_ARGS="--pidfile $PIDFILE --name $NAME --retry TERM/5/TERM/5"
 
 test -x $DAEMON || exit 0
 . /lib/lsb/init-functions 
