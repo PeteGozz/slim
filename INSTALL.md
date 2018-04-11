@@ -9,6 +9,7 @@ Prerequisites:
    - A C++ Compiler (g++)
    - PkgConfig (pkg-config (0.29-4)) 
    - fontconfig (2.11.0-6.7)
+   - libpam0g 
    - libfreetype (libfreetype6-dev)
    - libxft-dev (2.3.2-1+b2)
    - libxmu
@@ -19,7 +20,7 @@ Prerequisites:
    
    Optionally may also require:
 
-   - libpam0g  (required really) 
+
    - libck-connector0
    - libdbus-1-3
 
@@ -70,19 +71,20 @@ For example:  CMAKE_INSTALL_PREFIX "/usr/local"
 *Notes*:
 
 The above minimal instruction would be a reasonable first test only.
-You will need some functionality.
+You will need some login functionality.
+It does serve as a minimal test of the build requiremnts though.
 
 
 Configure Options
 -----------------
-Here is a _minimal tested_ configuration with cmake:
+Here is a _useful minimal tested_ configuration with cmake:
 This give you PAM for login / session authorisation. 
 Nothing much else other than themes. ::
 
     $ cmake ../ -DUSE_PAM=yes
 	
 
-This next incantation should get you a full build.
+This next incantation should get you a fatter build.
 With slimlock ConsoleKit and Desktop Bus support::
 
     $ cmake ../ -DUSE_PAM=yes -DBUILD_SLIMLOCK=yes  -DUSE_CONSOLEKIT=yes
@@ -115,6 +117,22 @@ Simple test
 
      $ ./slim -v
 
+Testing Themes
+--------------
+
+To test an fresh built *not installed* slim :: 
+
+
+   i.  install xnest - Nested X server
+   Then from the top level of the slim source tree ::
+   
+   $ ./build/slim -p ./themes/default
+   $ ./build/slim -p ./themes/xamplar
+   
+   
+ This allows testing of most functionality.
+ Including the _t y p e  i n  [account field] c o m m a n d s_
+ *exit reboot halt*.
 
 Installation
 ------------
