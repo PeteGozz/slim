@@ -78,7 +78,7 @@ It does serve as a minimal test of the build requiremnts though.
 Configure Options
 -----------------
 Here is a _useful minimal tested_ configuration with cmake:
-This give you PAM for login / session authorisation. 
+This enables PAM for login / session authorisation. 
 Nothing much else other than themes. ::
 
     $ cmake ../ -DUSE_PAM=yes
@@ -113,21 +113,23 @@ Configure Stage notes
 Simple test
 -----------
 
- Test the freshly made executable::
+Test the freshly made executable::
 
      $ ./slim -v
 
 Testing Themes
 --------------
 
-To test an fresh built *not installed* slim :: 
+To test an fresh built *not installed* slim. 
+From a logging in X session::
 
-
-   i.  install xnest - Nested X server
-   Then from the top level of the slim source tree ::
+    - first install xnest - Nested X server
+    - no need for dev headers just the package *xnest* suffices.
    
-   $ ./build/slim -p ./themes/default
-   $ ./build/slim -p ./themes/xamplar
+Then from the top level of the slim source tree::
+   
+    $ ./build/slim -p ./themes/default
+    $ ./build/slim -p ./themes/xamplar
    
    
  This allows testing of most functionality.
@@ -143,7 +145,7 @@ Also Consider current CMake settings:  CMAKE_INSTALL_PREFIX "/usr/local"
 
 The classic::
 
-     $ sudo make install
+    $ sudo make install
 
 Test the new system theme *from a running X session*::
 
@@ -199,12 +201,12 @@ Linked Libraries
     -ljpeg -lpng -lz libslim.so.1.3.6 -ljpeg -lpng -lz
 
 
-$ ldd slim
-$ objdump ./slim
+    $ ldd slim
+    $ objdump [options] ./slim
 
-$ file slim
+    $ file slim
 
- may approximate::
+ May more or less approximate::
 
      ELF 32-bit LSB shared object, Intel 80386, version 1 (SYSV),
      dynamically linked, interpreter /lib/ld-linux.so.2,
@@ -214,6 +216,10 @@ $ file slim
 
 Convenience Installable Archiver
 ---------------------------------
-From the build directory
 
-$ fakeroot cpack --config CPackConfig.cmake
+Cmake has a tar ball archiver maker thingy...
+From the build directory::
+
+    $ fakeroot cpack --config CPackConfig.cmake
+
+eof.
