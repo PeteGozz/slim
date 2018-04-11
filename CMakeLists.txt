@@ -15,7 +15,8 @@ INCLUDE(CheckCCompilerFlag)
 INCLUDE(CheckCXXCompilerFlag)
 INCLUDE(CheckTypeSize)
 
-# Version
+# Version path up to 7 because its well past time
+
 set(SLIM_VERSION_MAJOR "1")
 set(SLIM_VERSION_MINOR "3")
 set(SLIM_VERSION_PATCH "7")
