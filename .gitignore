@@ -7,3 +7,5 @@ build/
 debian/
 .pc/
 themes/devuan/
+cmake/themes
+

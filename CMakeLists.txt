@@ -15,11 +15,12 @@ INCLUDE(CheckCCompilerFlag)
 INCLUDE(CheckCXXCompilerFlag)
 INCLUDE(CheckTypeSize)
 
-# Version path up to 7 because its well past time
+# Version patch up to 8
+# Slimlock now must be specified at build time
 
 set(SLIM_VERSION_MAJOR "1")
 set(SLIM_VERSION_MINOR "3")
-set(SLIM_VERSION_PATCH "7")
+set(SLIM_VERSION_PATCH "8")
 set(SLIM_VERSION "${SLIM_VERSION_MAJOR}.${SLIM_VERSION_MINOR}.${SLIM_VERSION_PATCH}")
 
 set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "Installation Directory")
@@ -134,7 +135,10 @@ if(USE_PAM)
     message("\tPAM Not Found")
   endif(PAM_FOUND)
   if(BUILD_SLIMLOCK)
+    message("\tOK slimlock enabled")
     target_link_libraries(slimlock ${PAM_LIBRARY})
+    else(BUILD_SLIMLOCK)
+    message("\tNote slimlock NOT enabled")
   endif(BUILD_SLIMLOCK)
 else(USE_PAM)
   message("\tWarning PAM disabled")
@@ -229,6 +233,9 @@ if(BUILD_SLIMLOCK)
     ${CMAKE_THREAD_LIBS_INIT}
     libslim
     )
+  message("\tOK slimlock linked for build")
+else(BUILD_SLIMLOCK)
+  message("\tOK slimlock not to be built")
 endif(BUILD_SLIMLOCK)
 
 ## themes directory

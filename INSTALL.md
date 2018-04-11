@@ -72,13 +72,20 @@ For example:  CMAKE_INSTALL_PREFIX "/usr/local"
 The above minimal instruction would be a reasonable first test only.
 You will need some functionality.
 
+
 Configure Options
 -----------------
+Here is a _minimal tested_ configuration with cmake:
+This give you PAM for login / session authorisation. 
+Nothing much else other than themes. ::
+
+    $ cmake ../ -DUSE_PAM=yes
+	
 
 This next incantation should get you a full build.
-With ConsoleKit and Desktop Bus support::
+With slimlock ConsoleKit and Desktop Bus support::
 
-    $ cmake ../ -DUSE_PAM=yes -DUSE_CONSOLEKIT=yes
+    $ cmake ../ -DUSE_PAM=yes -DBUILD_SLIMLOCK=yes  -DUSE_CONSOLEKIT=yes
 
 To Disallow ConsoleKit  *(N.B. and by extension dbus)*
 and NOT build shared libraries::
@@ -95,7 +102,7 @@ Configure Stage notes
 .....................
 
 - Cmake caches assertively.
-- It quite safe to remove the ./build/ level cache files.
+- It is safe to remove the ./build/ level cache files.
   Re-runs do rebuild them.
   This approach extends to the clean build directory itself.
 - On a project of this modest size the compile time is short.
