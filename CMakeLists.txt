@@ -18,7 +18,7 @@ INCLUDE(CheckTypeSize)
 # Version
 set(SLIM_VERSION_MAJOR "1")
 set(SLIM_VERSION_MINOR "3")
-set(SLIM_VERSION_PATCH "6")
+set(SLIM_VERSION_PATCH "7")
 set(SLIM_VERSION "${SLIM_VERSION_MAJOR}.${SLIM_VERSION_MINOR}.${SLIM_VERSION_PATCH}")
 
 set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "Installation Directory")
@@ -49,34 +49,39 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -O2")
 
 # source 
 set(slim_srcs
-	main.cpp
-	app.cpp
-	numlock.cpp
-	switchuser.cpp
-	png.c
-	jpeg.c
-)
+  main.cpp
+  app.cpp
+  numlock.cpp
+  switchuser.cpp
+  png.c
+  jpeg.c
+  )
 
 set(slimlock_srcs
-	slimlock.cpp
+  slimlock.cpp
 )
 
 set(common_srcs
-    cfg.cpp
-    image.cpp
-    log.cpp
-    panel.cpp
-    util.cpp
-)
+  cfg.cpp
+  image.cpp
+  log.cpp
+  panel.cpp
+  util.cpp
+  )
 ### working on pam here 
+if(BUILD_SLIMLOCK)
+  add_executable(slimlock ${slimlock_srcs})
+  set(USE_PAM 1) 
+endif(BUILD_SLIMLOCK)
+
+
 if(USE_PAM)
   set(common_srcs
     ${common_srcs}
     PAM.cpp
     )
-  # Only build slimlock _if_ we are using PAM.
-  set(BUILD_SLIMLOCK 1)
 endif(USE_PAM)
+
 
 # Build common library
 set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
@@ -94,9 +99,6 @@ if(USE_CONSOLEKIT)
 endif(USE_CONSOLEKIT)
 
 add_executable(${PROJECT_NAME} ${slim_srcs})
-if(BUILD_SLIMLOCK)
-    add_executable(slimlock ${slimlock_srcs})
-endif(BUILD_SLIMLOCK)
 
 #Set the custom CMake module directory where our include/lib finders are
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
@@ -135,29 +137,29 @@ endif(USE_PAM)
 
 # ConsoleKit
 if(USE_CONSOLEKIT)
-	find_package(CkConnector)
-	message("\tNote ConsoleKit Enabled")
-	if(CKCONNECTOR_FOUND)
-		message("\tConsoleKit Found")
-		# DBus check
-		find_package(DBus REQUIRED)
-		if(DBUS_FOUND)
-			message("\tDNote Bus Found")
-			target_link_libraries(${PROJECT_NAME} ${DBUS_LIBRARIES})
-			include_directories(${DBUS_ARCH_INCLUDE_DIR})
-			include_directories(${DBUS_INCLUDE_DIR})
-			set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_CONSOLEKIT")
-			target_link_libraries(${PROJECT_NAME} ${CKCONNECTOR_LIBRARIES})
-			include_directories(${CKCONNECTOR_INCLUDE_DIR})
-		else(DBUS_FOUND)
-			message("\tDBus Not Found")
-		endif(DBUS_FOUND)
-	else(CKCONNECTOR_FOUND)
-		message("\tOK ConsoleKit Not Found")
-		message("\tOK ConsoleKit disabled")
-	endif(CKCONNECTOR_FOUND)
+  find_package(CkConnector)
+  message("\tNote ConsoleKit Enabled")
+  if(CKCONNECTOR_FOUND)
+    message("\tConsoleKit Found")
+    # DBus check
+    find_package(DBus REQUIRED)
+    if(DBUS_FOUND)
+      message("\tDNote Bus Found")
+      target_link_libraries(${PROJECT_NAME} ${DBUS_LIBRARIES})
+      include_directories(${DBUS_ARCH_INCLUDE_DIR})
+      include_directories(${DBUS_INCLUDE_DIR})
+      set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_CONSOLEKIT")
+      target_link_libraries(${PROJECT_NAME} ${CKCONNECTOR_LIBRARIES})
+      include_directories(${CKCONNECTOR_INCLUDE_DIR})
+    else(DBUS_FOUND)
+      message("\tDBus Not Found")
+    endif(DBUS_FOUND)
+  else(CKCONNECTOR_FOUND)
+    message("\tOK ConsoleKit Not Found")
+    message("\tOK ConsoleKit disabled")
+  endif(CKCONNECTOR_FOUND)
 else(USE_CONSOLEKIT)
-	message("\tOK ConsoleKit disabled")
+  message("\tOK ConsoleKit disabled")
 endif(USE_CONSOLEKIT)
 
 # system librarys
@@ -170,55 +172,55 @@ add_definitions(${SLIM_DEFINITIONS})
 
 #Set up include dirs with all found packages
 include_directories(
-	${X11_INCLUDE_DIR}
-	${X11_Xft_INCLUDE_PATH}
-	${X11_Xrender_INCLUDE_PATH}
-	${X11_Xrandr_INCLUDE_PATH}
-	${FREETYPE_INCLUDE_DIR_freetype2}
-	${X11_Xmu_INCLUDE_PATH}
-	${ZLIB_INCLUDE_DIR}
-	${JPEG_INCLUDE_DIR}
-	${PNG_INCLUDE_DIR}
-)
+  ${X11_INCLUDE_DIR}
+  ${X11_Xft_INCLUDE_PATH}
+  ${X11_Xrender_INCLUDE_PATH}
+  ${X11_Xrandr_INCLUDE_PATH}
+  ${FREETYPE_INCLUDE_DIR_freetype2}
+  ${X11_Xmu_INCLUDE_PATH}
+  ${ZLIB_INCLUDE_DIR}
+  ${JPEG_INCLUDE_DIR}
+  ${PNG_INCLUDE_DIR}
+  )
 
 target_link_libraries(libslim
-    ${JPEG_LIBRARIES}
-    ${PNG_LIBRARIES}
-)
+  ${JPEG_LIBRARIES}
+  ${PNG_LIBRARIES}
+  )
 
 #Set up library with all found packages for slim
 target_link_libraries(${PROJECT_NAME}
-	${M_LIB}
-	${RT_LIB}
-	${CRYPTO_LIB}
-	${X11_X11_LIB}
-	${X11_Xft_LIB}
-	${X11_Xrender_LIB}
-	${X11_Xrandr_LIB}
-	${X11_Xmu_LIB}
-	${FREETYPE_LIBRARY}
-	${JPEG_LIBRARIES}
-	${PNG_LIBRARIES}
-    libslim
+  ${M_LIB}
+  ${RT_LIB}
+  ${CRYPTO_LIB}
+  ${X11_X11_LIB}
+  ${X11_Xft_LIB}
+  ${X11_Xrender_LIB}
+  ${X11_Xrandr_LIB}
+  ${X11_Xmu_LIB}
+  ${FREETYPE_LIBRARY}
+  ${JPEG_LIBRARIES}
+  ${PNG_LIBRARIES}
+  libslim
 )
 
 if(BUILD_SLIMLOCK)
   #Set up library with all found packages for slimlock
   target_link_libraries(slimlock
-        ${M_LIB}
-        ${RT_LIB}
-        ${CRYPTO_LIB}
-        ${X11_X11_LIB}
-        ${X11_Xft_LIB}
-        ${X11_Xrender_LIB}
-        ${X11_Xrandr_LIB}
-        ${X11_Xmu_LIB}
-        ${X11_Xext_LIB}
-        ${FREETYPE_LIBRARY}
-        ${JPEG_LIBRARIES}
-        ${PNG_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT}
-        libslim
+    ${M_LIB}
+    ${RT_LIB}
+    ${CRYPTO_LIB}
+    ${X11_X11_LIB}
+    ${X11_Xft_LIB}
+    ${X11_Xrender_LIB}
+    ${X11_Xrandr_LIB}
+    ${X11_Xmu_LIB}
+    ${X11_Xext_LIB}
+    ${FREETYPE_LIBRARY}
+    ${JPEG_LIBRARIES}
+    ${PNG_LIBRARIES}
+    ${CMAKE_THREAD_LIBS_INIT}
+    libslim
     )
 endif(BUILD_SLIMLOCK)
 
@@ -231,13 +233,13 @@ install(TARGETS slim RUNTIME DESTINATION bin)
 install(TARGETS slimlock RUNTIME DESTINATION bin)
 
 if (BUILD_SHARED_LIBS)
-	set_target_properties(libslim PROPERTIES
-		OUTPUT_NAME slim
-		SOVERSION ${SLIM_VERSION})
-	install(TARGETS libslim
-		LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib
-	)
+  set_target_properties(libslim PROPERTIES
+    OUTPUT_NAME slim
+    SOVERSION ${SLIM_VERSION})
+  install(TARGETS libslim
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
 endif (BUILD_SHARED_LIBS)
 # man file
 install(FILES slim.1 DESTINATION ${MANDIR}/man1/)
@@ -263,5 +265,5 @@ set (CPACK_PACKAGE_VERSION_MAJOR "${SLIM_VERSION_MAJOR}")
 set (CPACK_PACKAGE_VERSION_MINOR "${SLIM_VERSION_MINOR}")
 set (CPACK_PACKAGE_VERSION_PATCH "${SLIM_VERSION_PATCH}")
 include (CPack)
-## its not the most beautiful thing you ever saw ##
+## its still not the most beautiful thing you ever saw ##
 
