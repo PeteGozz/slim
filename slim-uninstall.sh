@@ -2,12 +2,14 @@
 
 if [ ! -d ./build/ ] || [ ! -r  build/install_manifest.txt ]; then
     cat <<EOF
-    "You will have to make slim 
-         and install slim
-             before 
-        you can remove slim.
+    We need the ./build/install_manifest .
+               That is:
+        You will have to (re)make slim 
+           and install slim
+               before 
+           you can remove slim.
      
-     Please see the INSTALL file."
+       Please see the INSTALL file.
 EOF
     exit 0
 fi
