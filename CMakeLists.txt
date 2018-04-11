@@ -70,18 +70,20 @@ set(common_srcs
   util.cpp
   )
 ### working on pam here 
-if(BUILD_SLIMLOCK)
-  add_executable(slimlock ${slimlock_srcs})
-  set(USE_PAM 1) 
-endif(BUILD_SLIMLOCK)
-
 
 if(USE_PAM)
   set(common_srcs
     ${common_srcs}
     PAM.cpp
     )
+#  set(BUILD_SLIMLOCK 1)
 endif(USE_PAM)
+
+if(BUILD_SLIMLOCK)
+  add_executable(slimlock ${slimlock_srcs})
+  set(USE_PAM 1) 
+endif(BUILD_SLIMLOCK)
+
 
 
 # Build common library
@@ -121,20 +123,24 @@ endif(FONTCONFIG_FOUND)
 
 # PAM
 if(USE_PAM)
-	message("\tPAM Enabled")
-	find_package(PAM)
-	if(PAM_FOUND)
-		message("\tPAM Found")
-		set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_PAM")
-		target_link_libraries(${PROJECT_NAME} ${PAM_LIBRARY})
-		target_link_libraries(slimlock ${PAM_LIBRARY})
-		include_directories(${PAM_INCLUDE_DIR})
-	else(PAM_FOUND)
-		message("\tPAM Not Found")
-	endif(PAM_FOUND)
+  message("\tPAM Enabled")
+  find_package(PAM)
+  if(PAM_FOUND)
+    message("\tPAM Found")
+    set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_PAM")
+    target_link_libraries(${PROJECT_NAME} ${PAM_LIBRARY})
+    include_directories(${PAM_INCLUDE_DIR})
+  else(PAM_FOUND)
+    message("\tPAM Not Found")
+  endif(PAM_FOUND)
+  if(BUILD_SLIMLOCK)
+    target_link_libraries(slimlock ${PAM_LIBRARY})
+  endif(BUILD_SLIMLOCK)
 else(USE_PAM)
-	message("\tWarning PAM disabled")
+  message("\tWarning PAM disabled")
 endif(USE_PAM)
+
+
 
 # ConsoleKit
 if(USE_CONSOLEKIT)
@@ -231,7 +237,10 @@ subdirs(themes)
 ####### install
 # slim
 install(TARGETS slim RUNTIME DESTINATION bin)
-install(TARGETS slimlock RUNTIME DESTINATION bin)
+
+if(BUILD_SLIMLOCK)
+  install(TARGETS slimlock RUNTIME DESTINATION bin)
+endif(BUILD_SLIMLOCK)
 
 if (BUILD_SHARED_LIBS)
   set_target_properties(libslim PROPERTIES
