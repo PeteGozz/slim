@@ -72,7 +72,7 @@ For example:  CMAKE_INSTALL_PREFIX "/usr/local"
 
 The above minimal instruction would be a reasonable first test only.
 You will need some login functionality.
-It does serve as a minimal test of the build requiremnts though.
+It does serve as a minimal test of the build requirement's though.
 
 
 Configure Options
@@ -89,7 +89,7 @@ With slimlock ConsoleKit and Desktop Bus support::
 
     $ cmake ../ -DUSE_PAM=yes -DBUILD_SLIMLOCK=yes  -DUSE_CONSOLEKIT=yes
 
-To Disallow ConsoleKit  *(N.B. and by extension dbus)*
+To Disallow ConsoleKit  *(N.B. and by extension DBUS)*
 and NOT build shared libraries::
 
     $ cmake ../ -DUSE_PAM=yes -DUSE_CONSOLEKIT=no -DBUILD_SHARED_LIBS=no
@@ -120,11 +120,11 @@ Test the freshly made executable::
 Testing Themes
 --------------
 
-To test an fresh built *not installed* slim. 
-From a logging in X session::
+To test a fresh built slim. 
+From a logged in X session::
 
-    - first install xnest - Nested X server
-    - no need for dev headers just the package *xnest* suffices.
+    - first install *xnest* - Nested X server
+    - just the package *xnest* suffices.
    
 Then from the top level of the slim source tree::
    
@@ -133,7 +133,7 @@ Then from the top level of the slim source tree::
    
    
  This allows testing of most functionality.
- Including the _t y p e  i n  [account field] c o m m a n d s_
+ Including the account field _t y p e  i n  c o m m a n d s_
  *exit reboot halt*.
 
 Installation
@@ -141,13 +141,13 @@ Installation
 
 The GNU Makefile produced by cmake has some interesting targets.
 Also Consider current CMake settings:  CMAKE_INSTALL_PREFIX "/usr/local"
-** $ sudo make install/local  **  (may be reassuring.)
+** $ sudo make install/local  **  (may be reassuring or useful.)
 
 The classic::
 
     $ sudo make install
 
-Test the new system theme *from a running X session*::
+Test a new, installed,  _system_ theme *from a running X session*::
 
      $ slim -p /usr/local/share/slim/themes/default
 
@@ -192,7 +192,7 @@ Linked Libraries
 
  This is a typical linkage string passed to the compiler
  for the final slim (elf) executable.
- (With ConsoleKit and dbus.)
+ (With ConsoleKit and DBUS.)
 
 ::
 
@@ -217,7 +217,7 @@ Linked Libraries
 Convenience Installable Archiver
 ---------------------------------
 
-Cmake has a tar ball archiver maker thingy...
+Cmake has an archive maker thingy...
 From the build directory::
 
     $ fakeroot cpack --config CPackConfig.cmake
