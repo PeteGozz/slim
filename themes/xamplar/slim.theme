@@ -5,7 +5,7 @@
 #      with clean simple panel.
 #      
 #      Intended for use as a template, rather than as is.
-#      Peter Gossner 2017 placed under the GPL3 (or later) 
+#      Peter Gossner 2017-2018 placed under the GPL3 (or later) 
 
 #
 # Background Treatment
@@ -35,7 +35,7 @@ input_shadow_color      #111111
 #
 # Username Interface Label / Message 
 #
-username_msg            Account Username
+username_msg            Account Name
 username_font		Open Sans:size=18:italic:dpi=96
 username_x              50%
 username_y              100
@@ -53,7 +53,7 @@ input_shadow_yoffset    1
 #
 # Password Interface Label / message / nag
 #
-password_msg   Your Top-Secret Secured Password
+password_msg   Enter the Top-Secret Secured Password
 password_font  Open Sans:size=14:bold:dpi=96
 password_x              50%
 password_y              200
@@ -104,7 +104,7 @@ msg_shadow_yoffset 2
 #           F1
 #    Sets on the background
 #    rather than the panel
-#    Not for slimlock 
+#    _Not_ for slimlock 
 session_msg      Xsession::
 session_font     Open Sans:size=16:bold:dpi=96
 session_x        50%
@@ -117,7 +117,7 @@ session_shadow_yoffset 2
 # Hints and Intro Messages
 #  On the root screen
 #
-hints_msg            [F1] for more Xsessions. reboot .  halt .  or exit to terminal
+hints_msg            [F1] Selects Xsessions or: reboot . halt . exit . 
 # % or int tested OK 
 hints_x              50%
 hints_y              90%
@@ -134,9 +134,9 @@ dpms_off_timeout          1200
 wrong_passwd_timeout       2
 passwd_feedback_x         50%
 passwd_feedback_y         70%
-passwd_feedback_msg       Authentication has Failed
+passwd_feedback_msg       User Authentication has Failed
 # this functionallity to be restored
-passwd_feedback_capslock  CaPsLocK is ON
+passwd_feedback_capslock  CaPsLocK IS ON (! how rude !)
 show_username              1
 show_welcome_msg           1
 tty_lock                   0
