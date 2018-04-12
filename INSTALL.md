@@ -34,11 +34,11 @@ External Applications
 For Operations::
 
     - At least one Window Manager or Desktop Environment to _login_ to.
-      +  _F1_ Allows choice between installed environments.
+        --  _F1_ Allows choice between installed environments.
     -  "console" Requires an  Xterm
-    -  _F11_  as screenshot
-       + Requires "import" e.g as found in the imagemagick suite.
-       + Alt: slim has also well tested with "scrot"
+    -  _F11_  configured as screenshot:
+        -- Requires "import" e.g as found in the imagemagick suite.
+        -- Alt: slim has also been tested with "scrot"
 
 
 The Build Process
@@ -84,7 +84,7 @@ Nothing much else other than themes. ::
     $ cmake ../ -DUSE_PAM=yes
 	
 
-This next incantation should get you a fatter build.
+This next incantation should get you a more fullsome build.
 With slimlock ConsoleKit and Desktop Bus support::
 
     $ cmake ../ -DUSE_PAM=yes -DBUILD_SLIMLOCK=yes  -DUSE_CONSOLEKIT=yes
@@ -133,9 +133,10 @@ Then from the top level of the slim source tree::
    
    
  This allows testing of most functionality.
- Including the account field _t y p e  i n  c o m m a n d s_
- *exit reboot halt*.
+ Including the four account field commands.
+ *exit reboot halt console*.
 
+------------
 Installation
 ------------
 
