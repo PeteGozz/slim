@@ -33,33 +33,37 @@ see the [INSTALL file](./INSTALL.md)
 USAGE
 -----
 
-    To launch slim, execute the slim binary,
-    followed by the -d option 
-	to run as a daemon.
+To launch slim, execute the slim binary,
+followed by the -d option 
+to run as a daemon.
 
 
-    Enter _username_ and _password_ to login.
+    - Enter _username_ and _password_ to login.
 
-    *Your ~/.xinitrc file is executed by default*,
-    so be sure to have a working
-    .xinitrc file in your home.
-    (see the config file)
-	There is an example xinitrc.sample included with the source code.
-
-    Special "usernames"
-    (commands configurable in the config file)::
+*Your personal  ~/.xinitrc file is executed by default*,
+so be sure to have a working
+.xinitrc file in your home.
+(see the config file)
+If you have trouble starting your desktop environment:
+There is an [example ~/.xinitrc](./xinitrc.sample "example user xinitrc") 
+included with the source code.
+It is possible that has what you need.
+	
+Special "usernames"
+(commands configurable in the config file)::
 
       - console: start console login
       - exit: exit SLiM (drop to tty)
       - halt: halt the system
       - reboot: reboot the system
-  
-    Pressing the _F1_ keys steps through available X session / Window Managers
+  	  - Pressing the _F1_ keys 
+	    steps through available X session / Window Managers
+	  - Pressing the _F11_ key 
+	    executes a *user-specified command*.
     
-	Pressing the _F11_ key executes a *user-specified command*.
-    The default is to take a screenshot if the 'scrot'
-    program is available.
-    (This is configurable in the /etc/slim.conf file)
+The default is to take a screenshot if the 'scrot'
+program is available.
+(This is configurable in the /etc/slim.conf file)
 
 
 CONFIGURATION
