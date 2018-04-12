@@ -94,10 +94,13 @@ else
     exec $DBL $DEFAULT_SESSION       
 fi
 
-### never give up and assuming one is on an actual tty ###
+### never give up and *assuming* one is on an actual tty ###
 if [ "$?" != "0" ]; then
     echo -e "\ntry:\t xinit -- :$(tty | tr -d /dev/tty) or say :3"
     echo -e "or plain  startx "
 fi
+
+# exit without error
+# so as not to hang up logins (or "boots") on actual errors
 
 exit 0

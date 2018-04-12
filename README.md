@@ -23,7 +23,7 @@ Features:
        - PNG / JPEG support for backgrounds
        - XFT / freetype support
        - Double or single (GDM-style) inputbox support
-       - CMake build procedure
+       
 
 INSTALLATION
 ------------
@@ -34,15 +34,17 @@ USAGE
 -----
 
     To launch slim, execute the slim binary,
-    followed by the -d option if you want it to
-    run as a daemon in the background (recommended)
+    followed by the -d option 
+	to run as a daemon.
 
-    Enter username and password to login.
 
-    *The ~/.xinitrc file is executed by default*,
+    Enter _username_ and _password_ to login.
+
+    *Your ~/.xinitrc file is executed by default*,
     so be sure to have a working
     .xinitrc file in your home.
     (see the config file)
+	There is an example xinitrc.sample included with the source code.
 
     Special "usernames"
     (commands configurable in the config file)::
@@ -51,11 +53,14 @@ USAGE
       - exit: exit SLiM (drop to tty)
       - halt: halt the system
       - reboot: reboot the system
-
-    Pressing the _F11_ key executes a *user-specified command*.
+  
+    Pressing the _F1_ keys steps through available X session / Window Managers
+    
+	Pressing the _F11_ key executes a *user-specified command*.
     The default is to take a screenshot if the 'scrot'
     program is available.
     (This is configurable in the /etc/slim.conf file)
+
 
 CONFIGURATION
 -------------
