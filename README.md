@@ -28,15 +28,17 @@ Features:
 INSTALLATION
 ------------
 
-see the [INSTALL file](./INSTALL.md)
+see the [INSTALL file](./INSTALL.md "How to install slim from source")
 
 USAGE
 -----
 
 To launch slim, execute the slim binary,
-followed by the -d option 
-to run as a daemon.
-
+followed by the -d option to run as a daemon.
+You will probably need to allow your systems init system to auto launch
+at boot.
+sysV and systemd files are included and installed.
+The sysV file should also be close for rc.d (*BSD) systems.
 
     - Enter _username_ and _password_ to login.
 
