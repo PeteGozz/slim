@@ -79,12 +79,16 @@ Configure Options
 -----------------
 Here is a _useful minimal tested_ configuration with cmake:
 This enables PAM for login / session authorisation. 
-Nothing much else other than themes. ::
+Nothing much else other than themes. 
+These two should be equivalent if PAM 
+is available on the build system.     ::
 
     $ cmake ../ -DUSE_PAM=yes
-	
+    $ cmake ..	
 
-This next incantation should get you a more fullsome build.
+(Yes you may set -DUSE_PAM=no)
+
+This next incantation should get you a fullsome build.
 With slimlock ConsoleKit and Desktop Bus support::
 
     $ cmake ../ -DUSE_PAM=yes -DBUILD_SLIMLOCK=yes  -DUSE_CONSOLEKIT=yes
