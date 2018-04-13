@@ -62,7 +62,7 @@ set(slim_srcs
 
 set(slimlock_srcs
   slimlock.cpp
-)
+  )
 
 set(common_srcs
   cfg.cpp
@@ -72,19 +72,11 @@ set(common_srcs
   util.cpp
   )
 
-# Build common library
-set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
 
-if (BUILD_SHARED_LIBS)
-	message(STATUS "Enable shared library building")
-	add_library(libslim ${common_srcs})
-else(BUILD_SHARED_LIBS)
-	message(STATUS "Disable shared library building")
-	add_library(libslim STATIC ${common_srcs})
-endif(BUILD_SHARED_LIBS)
 
 if(USE_CONSOLEKIT)
-	set(slim_srcs ${slim_srcs} Ck.cpp)
+  message("\t Adding Console Kit to slim")
+  set(slim_srcs ${slim_srcs} Ck.cpp)
 endif(USE_CONSOLEKIT)
 
 add_executable(${PROJECT_NAME} ${slim_srcs})
@@ -108,32 +100,32 @@ if(FONTCONFIG_FOUND)
 	include_directories(${FONTCONFIG_INCLUDE_DIR})
 endif(FONTCONFIG_FOUND)
 
-# PAM
-
 if(BUILD_SLIMLOCK)
+  message("\tAdding slmlock and PAM to build")
   add_executable(slimlock ${slimlock_srcs})
   set(USE_PAM yes) 
 endif(BUILD_SLIMLOCK)
 
 
 
+
 if(PAM_FOUND)
+  message("\tOK: PAM functions included")
   set(USE_PAM yes) 
-  target_link_libraries(${PROJECT_NAME} ${PAM_LIBRARY})
-  include_directories(${PAM_INCLUDE_DIR})
-  set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_PAM")
 else(PAM_FOUND)
-  message("\tNote: PAM Not Found")
+  message("\tNOTE: PAM Not Found")
 endif(PAM_FOUND)
 
 if(USE_PAM)
-  message("\tPAM Enabled")
+  message("\tOK: Slimlock Possible")
+  set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_PAM")
+  target_link_libraries(${PROJECT_NAME} ${PAM_LIBRARY})
+  include_directories(${PAM_INCLUDE_DIR})
   set(common_srcs
     ${common_srcs}
     PAM.cpp
     )
-#  find_package(PAM)
-
+  
   # slimlock conditional on PAM enabled   
   if(BUILD_SLIMLOCK)
     message("\tOK slimlock enabled")
@@ -172,6 +164,17 @@ if(USE_CONSOLEKIT)
 else(USE_CONSOLEKIT)
   message("\tOK ConsoleKit disabled")
 endif(USE_CONSOLEKIT)
+
+# Build common library
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
+
+if (BUILD_SHARED_LIBS)
+	message(STATUS "Enable shared library building")
+	add_library(libslim ${common_srcs})
+else(BUILD_SHARED_LIBS)
+	message(STATUS "Disable shared library building")
+	add_library(libslim STATIC ${common_srcs})
+endif(BUILD_SHARED_LIBS)
 
 # system librarys
 find_library(M_LIB m)
@@ -233,7 +236,7 @@ if(BUILD_SLIMLOCK)
     ${CMAKE_THREAD_LIBS_INIT}
     libslim
     )
-  message("\tOK slimlock linked for build")
+  message("\tOK slimlock application set for build")
 else(BUILD_SLIMLOCK)
   message("\tOK slimlock not to be built")
 endif(BUILD_SLIMLOCK)
