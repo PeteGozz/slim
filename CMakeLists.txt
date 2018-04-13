@@ -273,7 +273,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
   # deliberately keeping the init suffix so as
   # to avoid package installs.
-  install(FILES slim.init DESTINATION ${SYSCONFDIR}/init.d/slim.init)
+  install(FILES slim.init DESTINATION ${SYSCONFDIR}/init.d/)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 ### CPack driven installer packages ###
