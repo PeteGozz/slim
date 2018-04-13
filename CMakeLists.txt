@@ -44,7 +44,8 @@ set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DVERSION=\"${SLIM_VERSION}\"")
 set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DPKGDATADIR=\"${PKGDATADIR}\"")
 set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DSYSCONFDIR=\"${SYSCONFDIR}\"")
 
-# Flags
+ 
+ # Flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g -O2")
 set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -Wall -g -O2")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -O2")
@@ -70,22 +71,6 @@ set(common_srcs
   panel.cpp
   util.cpp
   )
-### working on pam here 
-
-if(USE_PAM)
-  set(common_srcs
-    ${common_srcs}
-    PAM.cpp
-    )
-#  set(BUILD_SLIMLOCK 1)
-endif(USE_PAM)
-
-if(BUILD_SLIMLOCK)
-  add_executable(slimlock ${slimlock_srcs})
-  set(USE_PAM 1) 
-endif(BUILD_SLIMLOCK)
-
-
 
 # Build common library
 set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
@@ -112,6 +97,7 @@ find_package(Freetype REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(PNG REQUIRED)
 find_package(ZLIB REQUIRED)
+find_package(PAM)
 
 # Fontconfig
 set(FONTCONFIG_DIR ${CMAKE_MODULE_PATH})
@@ -123,17 +109,32 @@ if(FONTCONFIG_FOUND)
 endif(FONTCONFIG_FOUND)
 
 # PAM
+
+if(BUILD_SLIMLOCK)
+  add_executable(slimlock ${slimlock_srcs})
+  set(USE_PAM yes) 
+endif(BUILD_SLIMLOCK)
+
+
+
+if(PAM_FOUND)
+  set(USE_PAM yes) 
+  target_link_libraries(${PROJECT_NAME} ${PAM_LIBRARY})
+  include_directories(${PAM_INCLUDE_DIR})
+  set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_PAM")
+else(PAM_FOUND)
+  message("\tNote: PAM Not Found")
+endif(PAM_FOUND)
+
 if(USE_PAM)
   message("\tPAM Enabled")
-  find_package(PAM)
-  if(PAM_FOUND)
-    message("\tPAM Found")
-    set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_PAM")
-    target_link_libraries(${PROJECT_NAME} ${PAM_LIBRARY})
-    include_directories(${PAM_INCLUDE_DIR})
-  else(PAM_FOUND)
-    message("\tPAM Not Found")
-  endif(PAM_FOUND)
+  set(common_srcs
+    ${common_srcs}
+    PAM.cpp
+    )
+#  find_package(PAM)
+
+  # slimlock conditional on PAM enabled   
   if(BUILD_SLIMLOCK)
     message("\tOK slimlock enabled")
     target_link_libraries(slimlock ${PAM_LIBRARY})
@@ -141,9 +142,8 @@ if(USE_PAM)
     message("\tNote slimlock NOT enabled")
   endif(BUILD_SLIMLOCK)
 else(USE_PAM)
-  message("\tWarning PAM disabled")
-endif(USE_PAM)
-
+  message("\tWarning: PAM disabled")
+endif(USE_PAM)    
 
 
 # ConsoleKit
@@ -155,7 +155,7 @@ if(USE_CONSOLEKIT)
     # DBus check
     find_package(DBus REQUIRED)
     if(DBUS_FOUND)
-      message("\tDNote Bus Found")
+      message("\tDBus Found")
       target_link_libraries(${PROJECT_NAME} ${DBUS_LIBRARIES})
       include_directories(${DBUS_ARCH_INCLUDE_DIR})
       include_directories(${DBUS_INCLUDE_DIR})
@@ -258,6 +258,7 @@ if (BUILD_SHARED_LIBS)
     ARCHIVE DESTINATION lib
     )
 endif (BUILD_SHARED_LIBS)
+
 # man file
 install(FILES slim.1 DESTINATION ${MANDIR}/man1/)
 install(FILES slimlock.1 DESTINATION ${MANDIR}/man1/)
@@ -269,7 +270,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
   # deliberately keeping the init suffix so as
   # to avoid package installs.
-  install(FILES slim.init DESTINATION ${SYSCONFDIR}/init.d/)
+  install(FILES slim.init DESTINATION ${SYSCONFDIR}/init.d/slim.init)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 ### CPack driven installer packages ###
@@ -282,5 +283,5 @@ set (CPACK_PACKAGE_VERSION_MAJOR "${SLIM_VERSION_MAJOR}")
 set (CPACK_PACKAGE_VERSION_MINOR "${SLIM_VERSION_MINOR}")
 set (CPACK_PACKAGE_VERSION_PATCH "${SLIM_VERSION_PATCH}")
 include (CPack)
-## its still not the most beautiful thing you ever saw ##
+
 
