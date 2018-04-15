@@ -30,27 +30,28 @@ set(LIBDIR "/lib")
 set(MANDIR "${CMAKE_INSTALL_PREFIX}/share/man")
 
 set(SLIM_DEFINITIONS)
+
 if(${CMAKE_SYSTEM_NAME} MATCHES "NetBSD" OR
-		${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD" OR
-		${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD"
-		)
-	set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DNEEDS_BASENAME")
-else()
-	set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DHAVE_SHADOW")
-endif()
+    ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD"
+    )
+  set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DNEEDS_BASENAME")
+else(${CMAKE_SYSTEM_NAME} MATCHES "NetBSD" OR
+    ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+  set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DHAVE_SHADOW")
+endif(${CMAKE_SYSTEM_NAME} MATCHES "NetBSD" OR
+    ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
 
 set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DPACKAGE=\"slim\"")
 set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DVERSION=\"${SLIM_VERSION}\"")
 set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DPKGDATADIR=\"${PKGDATADIR}\"")
 set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DSYSCONFDIR=\"${SYSCONFDIR}\"")
 
- 
- # Flags
+# Compiler Flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g -O2")
 set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -Wall -g -O2")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -O2")
 
-# source 
+# sources 
 set(slim_srcs
   main.cpp
   app.cpp
@@ -71,8 +72,6 @@ set(common_srcs
   panel.cpp
   util.cpp
   )
-
-
 
 if(USE_CONSOLEKIT)
   message("\t Adding Console Kit to slim")
@@ -106,9 +105,7 @@ if(BUILD_SLIMLOCK)
   set(USE_PAM yes) 
 endif(BUILD_SLIMLOCK)
 
-
-
-
+# PAM found and use
 if(PAM_FOUND)
   message("\tOK: PAM functions included")
   set(USE_PAM yes) 
@@ -126,17 +123,16 @@ if(USE_PAM)
     PAM.cpp
     )
   
-  # slimlock conditional on PAM enabled   
-  if(BUILD_SLIMLOCK)
-    message("\tOK slimlock enabled")
-    target_link_libraries(slimlock ${PAM_LIBRARY})
-    else(BUILD_SLIMLOCK)
-    message("\tNote slimlock NOT enabled")
-  endif(BUILD_SLIMLOCK)
+# slimlock conditional on PAM enabled   
+if(BUILD_SLIMLOCK)
+  message("\tOK: slimlock enabled")
+  target_link_libraries(slimlock ${PAM_LIBRARY})
+else(BUILD_SLIMLOCK)
+  message("\tNote: slimlock screenlocker is NOT enabled")
+endif(BUILD_SLIMLOCK)
 else(USE_PAM)
   message("\tWarning: PAM disabled")
 endif(USE_PAM)    
-
 
 # ConsoleKit
 if(USE_CONSOLEKIT)
@@ -169,11 +165,11 @@ endif(USE_CONSOLEKIT)
 set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
 
 if (BUILD_SHARED_LIBS)
-	message(STATUS "Enable shared library building")
-	add_library(libslim ${common_srcs})
+  message(STATUS "Enable shared library building")
+  add_library(libslim ${common_srcs})
 else(BUILD_SHARED_LIBS)
-	message(STATUS "Disable shared library building")
-	add_library(libslim STATIC ${common_srcs})
+  message(STATUS "Disable shared library building")
+  add_library(libslim STATIC ${common_srcs})
 endif(BUILD_SHARED_LIBS)
 
 # system librarys
@@ -270,16 +266,26 @@ install(FILES slim.conf DESTINATION ${SYSCONFDIR})
 # systemd service file: mostly harmless
 # debian sysV style /etc/init.d/
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
+  # install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
   # deliberately keeping the init suffix so as
   # to avoid package installs.
   install(FILES slim.init DESTINATION ${SYSCONFDIR}/init.d/)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "NetBSD")
+  install(FILES slim.rc DESTINATION ${SYSCONFDIR}/rc.d/) 
+endif (${CMAKE_SYSTEM_NAME} MATCHES "NetBSD")
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+  install(FILES slim.rc DESTINATION ${SYSCONFDIR}/rc.d/) 
+endif (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+  
+include (InstallRequiredSystemLibraries)
+
 ### CPack driven installer packages ###
 ###   this works with fakeroot      ###
 ### fakeroot cpack --config CPackConfig.cmake ###
-include (InstallRequiredSystemLibraries)
+
 set (CPACK_RESOURCE_FILE_LICENSE  
   "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
 set (CPACK_PACKAGE_VERSION_MAJOR "${SLIM_VERSION_MAJOR}")

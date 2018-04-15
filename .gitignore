@@ -6,6 +6,7 @@
 build/
 debian/
 .pc/
-themes/devuan/
-cmake/themes
+cmake/
+netbsd/
+
 
