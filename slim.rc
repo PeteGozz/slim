@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# PROVIDE slim xdm
+# REQUIRE DAEMON LOGIN usr
+# KEYWORD: shutdown
+
+# test and  load the standardised sh helpers or
+# exit 0 if we can not read them.
+
+if [ -r /etc/rc.subr ]; then
+    . /etc/rc.subr
+else
+    echo -e "Slim: Unable to find expected NetBSD style RC sub-system."
+    echo -e "Slim: exiting quietly here."
+    exit 0
+fi
+
+name="slim"
+rc_var=$name
+command=/usr/local/bin/$name 
+pidfile=/var/run/${name}.pid
+load_rc_config $name
+run_rc_command "$1"
+
+
+# notes# notes# notes# notes
+# installer needs to
+# check and set /etc/rc.conf  
+# slim="YES" 
+# slim_flags="-d"
+
+## start_cmd=''
+## stop_cmd=''
+## extra_commands='theme_reload'
+##theme_reload_cmd=''
+# start stop restart status
+# onestart
