@@ -30,7 +30,7 @@ Prerequisites:
 Hint:
 -----
 
-On a deb based system (devuan ascii) approximate this to get started and 
+On a deb based system (Devuan ascii) approximate this to get started and 
 drag in most of the depends::
 
      sudo apt-get install cmake pkg-config fontconfig libpam0g libpam0g-dev\
@@ -107,24 +107,24 @@ is available on the build system.     ::
 
 (Yes you may set -DUSE_PAM=no)
 
-A succesful build prints look a lot like this::
+A successful build prints look a lot like this::
 
     $ cmake ../ -DUSE_PAM=yes
 		FontConfig Found
 		OK: PAM functions included
         OK: Slimlock Possible
-        Note: slimlock screenlocker is NOT enabled
+        Note: slimlock screen locker is NOT enabled
         OK ConsoleKit disabled
     -- Enable shared library building
 		OK slimlock not to be built
     -- Configuring done
     -- Generating done
-	-- Build files have been written to: /some/place/atyours/slim/build
+	-- Build files have been written to: /some/place/at-yours/slim/build
 
 Hint
 ....
 
-Treat "NOTFOUND" errors as a missing dependancy (at least at first).
+Treat "NOTFOUND" errors as a missing dependency (at least at first).
 e.g.::
 
       CMake Error: The following variables are used in this project, 
@@ -135,7 +135,7 @@ e.g.::
 More Complex Builds
 ...................
 
-This next incantation should get you a fullsome build.
+This next incantation should get you a fulsome build.
 With slimlock ConsoleKit and Desktop Bus support::
 
     $ cmake ../ -DUSE_PAM=yes -DBUILD_SLIMLOCK=yes  -DUSE_CONSOLEKIT=yes
@@ -207,8 +207,17 @@ Test a new, installed,  _system_ theme *from a running X session*::
      $ slim -p /usr/local/share/slim/themes/default
 
 
+
+
 Other
 -----
+Either a system wide xsession default needs to be established and or 
+a .xinitrc is required per user.
+
+There is an example .xinitrc in this source code.
+
+
+
 Some notes hints and paths from the wilds::
 
      $ make clean
