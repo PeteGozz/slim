@@ -12,33 +12,44 @@ Prerequisites:
    - libpam0g 
    - libfreetype (libfreetype6-dev)
    - libxft-dev (2.3.2-1+b2)
-   - libxmu
-   - libpng (libpng-dev) 
-   - zlib ("1.2.8")
+   - libxmu (libxmu6 2:1.1.2-2)
+   - libpng (libpng-dev) and compression with: 
+   - zlib ("1.2.8") (zlib1g-dev)
    - libjpeg (libjpeg9-dev)
    - X.org or XFree86
    
    Optionally may also require:
 
-
    - libck-connector0
    - libdbus-1-3
 
 
-    (These should be auto-detected cached  and reported 
+    (These latter two should be auto-detected cached and reported 
 	at _initial_ cmake time.)
+
+Hint:
+-----
+
+On a deb based system this should get you started ::
+
+   sudo apt-get install cmake pkg-config fontconfig libpam0g libfreetype6-dev libxft-dev libpng-dev libjpeg9-dev libxmu6 buid-essential
+
 
 External Applications
 ----------------------
 
 For Operations::
 
-    - At least one Window Manager or Desktop Environment to _login_ to.
-        --  _F1_ Allows choice between installed environments.
-    -  "console" Requires an  Xterm
-    -  _F11_  configured as screenshot:
-        -- Requires "import" e.g as found in the imagemagick suite.
-        -- Alt: slim has also been tested with "scrot"
+    - At least one Window Manager and or Desktop Environment to _login_ to.
+      --  _F1_ Allows choice between installed environments.
+	  openbox enlightenment mate and gnome type desktops test OK
+	  KDE *should* be OK but not tested by this writer ...
+      
+    - "console" Requires an Xterm or equivalent
+	
+    - _F11_  configured as screenshot:
+      -- Requires "import" e.g as found in the imagemagick suite.
+      -- Alternatively: slim has been tested with "scrot"
 
 
 The Build Process
