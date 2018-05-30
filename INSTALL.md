@@ -30,10 +30,12 @@ Prerequisites:
 Hint:
 -----
 
-On a deb based system this should get you started and 
+On a deb based system (devuan ascii) approximate this to get started and 
 drag in most of the depends::
 
-   sudo apt-get install cmake pkg-config fontconfig libpam0g  libpam0g-dev libfreetype6-dev libxft-dev libpng-dev libjpeg9-dev libxmu-dev libxrandr-dev x11proto-randr-dev build-essential
+     sudo apt-get install cmake pkg-config fontconfig libpam0g libpam0g-dev\
+     libfreetype6-dev libxft-dev libpng-dev libjpeg9-dev libxmu-dev\
+	 libxrandr-dev x11proto-randr-dev build-essential
 
 
 External Applications
@@ -92,13 +94,46 @@ Configure Options
 Here is a _useful minimal tested_ configuration with cmake:
 This enables PAM for login / session authorisation. 
 Nothing much else other than themes. 
+
+Default Build
+.............
+
 These two should be equivalent if PAM 
 is available on the build system.     ::
+
 
     $ cmake ../ -DUSE_PAM=yes
     $ cmake ..	
 
 (Yes you may set -DUSE_PAM=no)
+
+A succesful build prints look a lot like this::
+
+    $ cmake ../ -DUSE_PAM=yes
+		FontConfig Found
+		OK: PAM functions included
+        OK: Slimlock Possible
+        Note: slimlock screenlocker is NOT enabled
+        OK ConsoleKit disabled
+    -- Enable shared library building
+		OK slimlock not to be built
+    -- Configuring done
+    -- Generating done
+	-- Build files have been written to: /some/place/atyours/slim/build
+
+Hint
+....
+
+Treat "NOTFOUND" errors as a missing dependancy (at least at first).
+e.g.::
+
+      CMake Error: The following variables are used in this project, 
+      but they are set to NOTFOUND
+	  
+
+
+More Complex Builds
+...................
 
 This next incantation should get you a fullsome build.
 With slimlock ConsoleKit and Desktop Bus support::
@@ -116,6 +151,8 @@ Or more probably not so::
      $ make
      $ ls
 
+
+     
 Configure Stage notes
 .....................
 
@@ -132,7 +169,8 @@ Simple test
 Test the freshly made executable::
 
      $ ./slim -v
-
+     slim version 1.3.9
+     
 Testing Themes
 --------------
 
