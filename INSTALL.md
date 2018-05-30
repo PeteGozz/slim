@@ -7,15 +7,15 @@ Prerequisites:
 
    - cmake (version 3.10.2)
    - A C++ Compiler (g++)
-   - PkgConfig (pkg-config (0.29-4)) 
-   - fontconfig (2.11.0-6.7)
-   - libpam0g 
+   - PkgConfig   (pkg-config (0.29-4)) 
+   - fontconfig  (2.11.0-6.7)
+   - libpam0g    (libpam0g-dev)
    - libfreetype (libfreetype6-dev)
-   - libxft-dev (2.3.2-1+b2)
-   - libxmu (libxmu6 2:1.1.2-2)
-   - libpng (libpng-dev) and compression with: 
-   - zlib ("1.2.8") (zlib1g-dev)
-   - libjpeg (libjpeg9-dev)
+   - libxft-dev  (2.3.2-1+b2)
+   - libxmu      (libxmu6 2:1.1.2-2)
+   - libpng      (libpng-dev) and compression with: 
+   - zlib        (zlib1g-dev "1.2.8") 
+   - libjpeg     (libjpeg9-dev)
    - X.org or XFree86
    
    Optionally may also require:
@@ -30,9 +30,10 @@ Prerequisites:
 Hint:
 -----
 
-On a deb based system this should get you started ::
+On a deb based system this should get you started and 
+drag in most of the depends::
 
-   sudo apt-get install cmake pkg-config fontconfig libpam0g libfreetype6-dev libxft-dev libpng-dev libjpeg9-dev libxmu6 buid-essential
+   sudo apt-get install cmake pkg-config fontconfig libpam0g  libpam0g-dev libfreetype6-dev libxft-dev libpng-dev libjpeg9-dev libxmu-dev libxrandr-dev x11proto-randr-dev build-essential
 
 
 External Applications
