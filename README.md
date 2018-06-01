@@ -43,13 +43,16 @@ The sysV file should also be close for rc.d (*BSD) systems.
     - Enter _username_ and _password_ to login.
 
 *Your personal  ~/.xinitrc file is executed by default*,
+
 so be sure to have a working
 .xinitrc file in your home.
 (see the config file)
+
+
 If you have trouble starting your desktop environment:
 There is an [example ~/.xinitrc](./xinitrc.sample "example user xinitrc") 
 included with the source code.
-It is possible that has what you need.
+It is possible that has what you need without alteration.
 	
 Special "usernames"
 (commands configurable in the config file)::
