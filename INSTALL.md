@@ -60,33 +60,33 @@ The Build Process
 
 Here is the short version::
 
-  mkdir build ;
-  cd ./build ;
-  cmake ../  -DUSE_PAM=yes ;
+    mkdir build ;
+	cd ./build ;
+	cmake ../  -DUSE_PAM=yes ;
 
 Step by step
 
 1. Create a clean space to build the software::
 
-    $ mkdir build
+		$ mkdir build
 
-*Optionally* edit the CMakefile.txt
+*Optionally* edit the CMakefile.txt 
 to adjust libraries and paths to your Operating System (if needed).
 For example:  CMAKE_INSTALL_PREFIX "/usr/local"
 
 2. Work from the clean dir::
 
-     $ cd build
+		$ cd build
 
 3. Configure your final make files::
 
-     $ cmake ../
+		$ cmake ../
 
 *Notes*:
 
-The above minimal instruction would be a reasonable first test only.
-You will need some login functionality.
-It does serve as a minimal test of the build requirement's though.
+The above minimal instruction would be a reasonable first attempt.
+You will possibly need some login functionality.
+(It does serve as a minimal test of the build requirement's though.)
 
 
 Configure Options
@@ -105,9 +105,9 @@ is available on the build system.     ::
     $ cmake ../ -DUSE_PAM=yes
     $ cmake ..	
 
-(Yes you may set -DUSE_PAM=no)
+(you may set -DUSE_PAM=no)
 
-A successful build prints look a lot like this::
+Successful builds print output that looks much like this::
 
     $ cmake ../ -DUSE_PAM=yes
 		FontConfig Found
@@ -136,7 +136,7 @@ More Complex Builds
 ...................
 
 This next incantation should get you a fulsome build.
-With slimlock ConsoleKit and Desktop Bus support::
+With slimlock ConsoleKit and Desktop Bus (DBUS) support::
 
     $ cmake ../ -DUSE_PAM=yes -DBUILD_SLIMLOCK=yes  -DUSE_CONSOLEKIT=yes
 
@@ -206,16 +206,14 @@ Test a new, installed,  _system_ theme *from a running X session*::
 
      $ slim -p /usr/local/share/slim/themes/default
 
+------
+Others
+------
 
-
-
-Other
------
-Either a system wide xsession default needs to be established and or 
+Either a system wide xsession default needs to be established and / or 
 a .xinitrc is required per user.
 
 There is an example .xinitrc in this source code.
-
 
 
 Some notes hints and paths from the wilds::
@@ -227,6 +225,24 @@ Some notes hints and paths from the wilds::
 (all run from the build directory)
 
 Remove the "build" directory tree (only) to start over.
+
+Daemon Time
+-----------
+
+By default a sysV type slim.init (executable) is installed to /etc/init.d/ .
+There  is also a untested systemd service file that may be installed. (shrug)
+Finally there is a NetBSD style rc script (or just mod the sysV one) in the top of the source tree.
+
+You will have to manually enable them via whichever mechanisms works best for you.
+
+
+
+Uninstall
+---------
+
+There is a bash script in the top of the source tree that should enable a clean UN-install.
+
+
 
 Path Manifest
 -------------
@@ -249,6 +265,8 @@ Notice *only rebuilt* files are re-installed ::
     -- Installing: /usr/local/share/slim/themes/default/slim.theme
     -- Installing: /usr/local/share/slim/themes/default/panel.png
     -- Installing: /usr/local/share/slim/themes/default/background.jpg
+
+
 
 
 Linked Libraries
@@ -276,6 +294,8 @@ Linked Libraries
      dynamically linked, interpreter /lib/ld-linux.so.2,
      for GNU/Linux 2.6.32,
      BuildID[sha1]=b44698a3baf559d0a79e517221c0ad6cea2b5504, not stripped
+
+
 
 
 Convenience Installable Archiver
