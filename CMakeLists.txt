@@ -268,17 +268,20 @@ install(FILES slim.conf DESTINATION ${SYSCONFDIR})
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   # install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
   # deliberately keeping the init suffix so as
-  # to avoid package installs.
-  install(FILES slim.init DESTINATION ${SYSCONFDIR}/init.d/)
+  # to avoid package installs or other daemon control systems
+  install(FILES slim.sysv DESTINATION ${SYSCONFDIR}/init.d/)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-
+# BSD tweaks might go here
 if (${CMAKE_SYSTEM_NAME} MATCHES "NetBSD")
   install(FILES slim.rc DESTINATION ${SYSCONFDIR}/rc.d/) 
 endif (${CMAKE_SYSTEM_NAME} MATCHES "NetBSD")
-
 if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
   install(FILES slim.rc DESTINATION ${SYSCONFDIR}/rc.d/) 
 endif (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+if (${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD")
+  install(FILES slim.rc DESTINATION ${SYSCONFDIR}/rc.d/) 
+endif (${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD")
+
   
 include (InstallRequiredSystemLibraries)
 
