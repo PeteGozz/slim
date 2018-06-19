@@ -29,15 +29,20 @@ fi
 
 if [ ! -z $1 ];
 then
+    echo "asking for session $1"
     # $1 hopefully maps to
     # one of these executables like so:
     case $1 in			
-	xfce4*)
+
+	xfce4* )
 	    exec $DBL xfce4-session
 	    ;;
 	fluxbo* | flux )
 	    # see also: ~/.fluxbox/startup
 	    exec $DBL startfluxbox
+	    ;;
+	mate* )
+	    exec $DBL mate-session
 	    ;;
 	openbo* | ob )
 	    # see also: ~/.config/openbox/autostart 
@@ -53,15 +58,15 @@ then
 	    xterm -e /bin/bash &
 	    exec $DBL twm 
 	    ;;
-	icewm)
+	icewm )
 	    icewmbg &
 	    icewmtray &
 	    exec $DBL icewm
 	    ;;
-	wmaker)
+	wmaker )
 	    exec $DBL wmaker
 	    ;;
-	blackb*)
+	blackb* )
 	    exec $DBL blackbox
 	    ;;
 	*)
