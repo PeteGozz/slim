@@ -7,7 +7,7 @@
 # Devuan default for jessie or ascii is xfce4 :
 # see the case statement below for examples
 
-DEFAULT_SESSION=xfce4-session
+DEFAULT_SESSION=openbox-session
 
 if test -x dbus-launch ; then
     # there is system dbus infrastructure
@@ -45,7 +45,7 @@ then
 	    exec $DBL mate-session
 	    ;;
 	openbo* | ob )
-	    # see also: ~/.config/openbox/autostart 
+	    # see also your personal: ~/.config/openbox/autostart 
 	    exec $DBL openbox-session
 	    ;;
 	dwm )
